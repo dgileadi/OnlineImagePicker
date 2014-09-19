@@ -10,7 +10,13 @@
 		9DFDCA02F36F4BD98369CFFC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FE8D751BAA43EA922A4C44 /* libPods.a */; };
 		BD44067019BA08480059F5AC /* OnlineImagePicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BD44066F19BA08480059F5AC /* OnlineImagePicker.h */; };
 		BD44067219BA08480059F5AC /* OnlineImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = BD44067119BA08480059F5AC /* OnlineImagePicker.m */; };
-		BD4406AB19BA0F0E0059F5AC /* OIPFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4406AA19BA0F0E0059F5AC /* OIPFilter.m */; };
+		BDACD8AF19C1068F004F112B /* OnlineImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BDACD8AE19C1068F004F112B /* OnlineImageManager.m */; };
+		BDB4220819C25C540070C4AD /* InstagramUserImagesSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BDB4220719C25C540070C4AD /* InstagramUserImagesSource.m */; };
+		BDD7783919CCD01700B9F9D3 /* InstagramImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD7783819CCD01700B9F9D3 /* InstagramImageInfo.m */; };
+		BDD7783D19CCD88E00B9F9D3 /* PhotoLibraryImageSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD7783C19CCD88E00B9F9D3 /* PhotoLibraryImageSource.m */; };
+		BDD7784019CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD7783F19CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.m */; };
+		BDD7784319CCDA6300B9F9D3 /* ALAssetImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD7784219CCDA6300B9F9D3 /* ALAssetImageInfo.m */; };
+		BDD7784619CCEE4E00B9F9D3 /* SDWebImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD7784519CCEE4E00B9F9D3 /* SDWebImageInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,9 +38,22 @@
 		BD44066C19BA08480059F5AC /* libOnlineImagePicker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOnlineImagePicker.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD44066F19BA08480059F5AC /* OnlineImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnlineImagePicker.h; sourceTree = "<group>"; };
 		BD44067119BA08480059F5AC /* OnlineImagePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnlineImagePicker.m; sourceTree = "<group>"; };
-		BD4406A819BA0D950059F5AC /* OIPImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OIPImageSource.h; sourceTree = "<group>"; };
-		BD4406A919BA0F0E0059F5AC /* OIPFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OIPFilter.h; sourceTree = "<group>"; };
-		BD4406AA19BA0F0E0059F5AC /* OIPFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OIPFilter.m; sourceTree = "<group>"; };
+		BD4406A819BA0D950059F5AC /* OnlineImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineImageSource.h; sourceTree = "<group>"; };
+		BDACD8AD19C1068F004F112B /* OnlineImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineImageManager.h; sourceTree = "<group>"; };
+		BDACD8AE19C1068F004F112B /* OnlineImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnlineImageManager.m; sourceTree = "<group>"; };
+		BDB4220219C256A60070C4AD /* OnlineImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnlineImageInfo.h; sourceTree = "<group>"; };
+		BDB4220619C25C540070C4AD /* InstagramUserImagesSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InstagramUserImagesSource.h; path = OnlineImagePicker/Instagram/InstagramUserImagesSource.h; sourceTree = "<group>"; };
+		BDB4220719C25C540070C4AD /* InstagramUserImagesSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InstagramUserImagesSource.m; path = OnlineImagePicker/Instagram/InstagramUserImagesSource.m; sourceTree = "<group>"; };
+		BDD7783719CCD01700B9F9D3 /* InstagramImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InstagramImageInfo.h; path = OnlineImagePicker/Instagram/InstagramImageInfo.h; sourceTree = "<group>"; };
+		BDD7783819CCD01700B9F9D3 /* InstagramImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InstagramImageInfo.m; path = OnlineImagePicker/Instagram/InstagramImageInfo.m; sourceTree = "<group>"; };
+		BDD7783B19CCD88E00B9F9D3 /* PhotoLibraryImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoLibraryImageSource.h; path = OnlineImagePicker/PhotoLibrary/PhotoLibraryImageSource.h; sourceTree = "<group>"; };
+		BDD7783C19CCD88E00B9F9D3 /* PhotoLibraryImageSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoLibraryImageSource.m; path = OnlineImagePicker/PhotoLibrary/PhotoLibraryImageSource.m; sourceTree = "<group>"; };
+		BDD7783E19CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoLibraryImageInfo.h; path = OnlineImagePicker/PhotoLibrary/PhotoLibraryImageInfo.h; sourceTree = "<group>"; };
+		BDD7783F19CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoLibraryImageInfo.m; path = OnlineImagePicker/PhotoLibrary/PhotoLibraryImageInfo.m; sourceTree = "<group>"; };
+		BDD7784119CCDA6300B9F9D3 /* ALAssetImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ALAssetImageInfo.h; path = OnlineImagePicker/PhotoLibrary/ALAssetImageInfo.h; sourceTree = "<group>"; };
+		BDD7784219CCDA6300B9F9D3 /* ALAssetImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ALAssetImageInfo.m; path = OnlineImagePicker/PhotoLibrary/ALAssetImageInfo.m; sourceTree = "<group>"; };
+		BDD7784419CCEE4E00B9F9D3 /* SDWebImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWebImageInfo.h; sourceTree = "<group>"; };
+		BDD7784519CCEE4E00B9F9D3 /* SDWebImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWebImageInfo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +80,10 @@
 			isa = PBXGroup;
 			children = (
 				BD44066E19BA08480059F5AC /* OnlineImagePicker */,
+				BDB4220419C25C060070C4AD /* Facebook */,
+				BDB4220519C25C100070C4AD /* Flickr */,
+				BDB4220319C25BF30070C4AD /* Instagram */,
+				BDD7783A19CCD84700B9F9D3 /* PhotoLibrary */,
 				BD44066D19BA08480059F5AC /* Products */,
 				73151A64C6BF4B10B793F7D2 /* Pods.xcconfig */,
 				4DA561131E244FFBA06E570B /* Frameworks */,
@@ -80,11 +103,52 @@
 			children = (
 				BD44066F19BA08480059F5AC /* OnlineImagePicker.h */,
 				BD44067119BA08480059F5AC /* OnlineImagePicker.m */,
-				BD4406A819BA0D950059F5AC /* OIPImageSource.h */,
-				BD4406A919BA0F0E0059F5AC /* OIPFilter.h */,
-				BD4406AA19BA0F0E0059F5AC /* OIPFilter.m */,
+				BDACD8AD19C1068F004F112B /* OnlineImageManager.h */,
+				BDACD8AE19C1068F004F112B /* OnlineImageManager.m */,
+				BDB4220219C256A60070C4AD /* OnlineImageInfo.h */,
+				BD4406A819BA0D950059F5AC /* OnlineImageSource.h */,
+				BDD7784419CCEE4E00B9F9D3 /* SDWebImageInfo.h */,
+				BDD7784519CCEE4E00B9F9D3 /* SDWebImageInfo.m */,
 			);
 			path = OnlineImagePicker;
+			sourceTree = "<group>";
+		};
+		BDB4220319C25BF30070C4AD /* Instagram */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4220619C25C540070C4AD /* InstagramUserImagesSource.h */,
+				BDB4220719C25C540070C4AD /* InstagramUserImagesSource.m */,
+				BDD7783719CCD01700B9F9D3 /* InstagramImageInfo.h */,
+				BDD7783819CCD01700B9F9D3 /* InstagramImageInfo.m */,
+			);
+			name = Instagram;
+			sourceTree = "<group>";
+		};
+		BDB4220419C25C060070C4AD /* Facebook */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Facebook;
+			sourceTree = "<group>";
+		};
+		BDB4220519C25C100070C4AD /* Flickr */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Flickr;
+			sourceTree = "<group>";
+		};
+		BDD7783A19CCD84700B9F9D3 /* PhotoLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				BDD7783B19CCD88E00B9F9D3 /* PhotoLibraryImageSource.h */,
+				BDD7783C19CCD88E00B9F9D3 /* PhotoLibraryImageSource.m */,
+				BDD7783E19CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.h */,
+				BDD7783F19CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.m */,
+				BDD7784119CCDA6300B9F9D3 /* ALAssetImageInfo.h */,
+				BDD7784219CCDA6300B9F9D3 /* ALAssetImageInfo.m */,
+			);
+			name = PhotoLibrary;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,8 +242,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD4406AB19BA0F0E0059F5AC /* OIPFilter.m in Sources */,
+				BDD7783919CCD01700B9F9D3 /* InstagramImageInfo.m in Sources */,
+				BDB4220819C25C540070C4AD /* InstagramUserImagesSource.m in Sources */,
+				BDD7783D19CCD88E00B9F9D3 /* PhotoLibraryImageSource.m in Sources */,
+				BDACD8AF19C1068F004F112B /* OnlineImageManager.m in Sources */,
+				BDD7784019CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.m in Sources */,
 				BD44067219BA08480059F5AC /* OnlineImagePicker.m in Sources */,
+				BDD7784319CCDA6300B9F9D3 /* ALAssetImageInfo.m in Sources */,
+				BDD7784619CCEE4E00B9F9D3 /* SDWebImageInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

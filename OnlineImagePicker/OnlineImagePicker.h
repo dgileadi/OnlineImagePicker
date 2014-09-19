@@ -7,7 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface OnlineImagePicker : NSObject
+/**
+ * An implementation of UICollectionViewController that supports loading images from online sources like Facebook, Instagram and Flickr.
+ */
+@interface OnlineImagePicker : UICollectionViewController
 
 @end

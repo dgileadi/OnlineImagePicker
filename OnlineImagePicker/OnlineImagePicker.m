@@ -10,4 +10,10 @@
 
 @implementation OnlineImagePicker
 
+/*
+ SDWebImageDownloader *downloader = [SDWebImageManager sharedManager].imageDownloader;
+ downloader.headersFilter = ^NSDictionary *(NSURL *url, NSDictionary *headers) {
+ };
+ */
+
 @end
