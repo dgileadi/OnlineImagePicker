@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A4D6BC59-9613-45BD-A8F3-A90303795AD2</string>
+	<key>IDESourceControlProjectName</key>
+	<string>OnlineImagePicker</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</key>
+		<string>bitbucket.org:david_gileadi/quickscrap.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>OnlineImagePicker/OnlineImagePicker.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>bitbucket.org:david_gileadi/quickscrap.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Quickscrap</string>
+		</dict>
+	</array>
+</dict>
+</plist>
