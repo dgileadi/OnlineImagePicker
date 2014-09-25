@@ -42,7 +42,8 @@ CGFloat CGSizeArea(CGSize size) {
         if (CGSizeArea(newDifference) < CGSizeArea(oldDifference)) {
             *currentSize = size;
             return url;
-        }
+        } else
+            return currentURL;
     }
 }
 

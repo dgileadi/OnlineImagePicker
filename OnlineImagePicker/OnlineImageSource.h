@@ -38,7 +38,7 @@ typedef void (^OnlineImageSourceFailureBlock)(NSError* error);
  * @param onSuccess An OnlineImageSourceResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
  * @param onFailure An OnlineImageSourceFailureBlock that is called if the request fails, providing the error that occurred.
  */
--(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock) onSuccess orFailure:(OnlineImageSourceFailureBlock) onFailure;
+-(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure;
 
 /**
  * Continue a previous request for images, providing the next page of results.
@@ -46,6 +46,6 @@ typedef void (^OnlineImageSourceFailureBlock)(NSError* error);
  * @param onSuccess An OnlineImageSourceResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
  * @param onFailure An OnlineImageSourceFailureBlock that is called if the request fails, providing the error that occurred.
  */
--(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock) onSuccess orFailure:(OnlineImageSourceFailureBlock) onFailure;
+-(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure;
 
 @end

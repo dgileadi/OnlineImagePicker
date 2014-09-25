@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
+#if __IPHONE_8_0
+
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
 #import "OnlineImageInfo.h"
@@ -17,3 +19,5 @@
 -(id) initWithAsset:(PHAsset *)asset;
 
 @end
+
+#endif

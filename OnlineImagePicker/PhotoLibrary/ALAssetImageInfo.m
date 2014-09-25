@@ -7,6 +7,7 @@
 //
 
 #import "ALAssetImageInfo.h"
+#import <UIKit/UIKit.h>
 
 @implementation ALAssetImageInfo
 
@@ -16,12 +17,27 @@
     return self;
 }
 
--(NSURL *) thumbnailURL {
-    return self.asset.thumbnail;
+-(id<OnlineImageLoad>) loadThumbnailForTargetSize:(CGSize)size
+                                         progress:(OnlineImageInfoProgressBlock)progressBlock
+                                        completed:(OnlineImageInfoCompletedBlock)completedBlock {
+    CGImageRef thumbnailImageRef = [self.asset thumbnail];
+    UIImage *thumbnail = [UIImage imageWithCGImage:thumbnailImageRef];
+    completedBlock(thumbnail, nil);
+    return nil;
+}
+
+-(id<OnlineImageLoad>) loadFullSizeWithProgress:(OnlineImageInfoProgressBlock)progressBlock
+                                      completed:(OnlineImageInfoCompletedBlock)completedBlock {
+    ALAssetRepresentation *representation = [self.asset defaultRepresentation];
+    UIImage *image = [UIImage imageWithCGImage:[representation fullResolutionImage]
+                                         scale:[representation scale]
+                                   orientation:UIImageOrientationUp];
+    completedBlock(image, nil);
+    return nil;
 }
 
 -(id) metadata {
-    return asset;
+    return self.asset;
 }
 
 @end

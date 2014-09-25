@@ -8,12 +8,45 @@
 
 #import "SDWebImageInfo.h"
 
+
+@interface SDWebImageOperationLoad : NSObject<OnlineImageLoad>
+
+@property(nonatomic, readonly) id<SDWebImageOperation> operation;
+
+-(id) initWithOperation:(id<SDWebImageOperation>)operation;
+
+@end
+
+@implementation SDWebImageOperationLoad
+
+-(id) initWithOperation:(id<SDWebImageOperation>)operation {
+    if (self = [super init])
+        _operation = operation;
+    return self;
+}
+
+-(void) cancel {
+    [self.operation cancel];
+}
+
+@end
+
+
+
+
 @implementation SDWebImageInfo
 
--(id<SDWebImageOperation>) loadThumbnailForTargetSize:(CGSize) size completed:(OnlineImageInfoBlock)onComplete {
-    [self loadThumbnailForTargetSize:size options:self.options progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-        onComplete(image, error);
+-(id<OnlineImageLoad>) loadThumbnailForTargetSize:(CGSize)size
+                                             progress:(OnlineImageInfoProgressBlock)progressBlock
+                                            completed:(OnlineImageInfoCompletedBlock)completedBlock {
+    id<SDWebImageOperation> operation = [self loadThumbnailForTargetSize:size options:self.options progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        double progress = receivedSize;
+        progress /= expectedSize;
+        progressBlock(progress);
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        completedBlock(image, error);
     }];
+    return [[SDWebImageOperationLoad alloc] initWithOperation:operation];
 }
 
 -(id<SDWebImageOperation>) loadThumbnailForTargetSize:(CGSize) size
@@ -26,10 +59,16 @@
                                                          completed:completedBlock];
 }
 
--(id<SDWebImageOperation>) loadFullSize:(OnlineImageInfoBlock)onComplete {
-    [self loadFullSizeWithOptions:self.options progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-        onComplete(image, error);
+-(id<OnlineImageLoad>) loadFullSizeWithProgress:(OnlineImageInfoProgressBlock)progressBlock
+                                          completed:(OnlineImageInfoCompletedBlock)completedBlock {
+    id<SDWebImageOperation> operation = [self loadFullSizeWithOptions:self.options progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        double progress = receivedSize;
+        progress /= expectedSize;
+        progressBlock(progress);
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        completedBlock(image, error);
     }];
+    return [[SDWebImageOperationLoad alloc] initWithOperation:operation];
 }
 
 -(id<SDWebImageOperation>) loadFullSizeWithOptions:(SDWebImageOptions)options
