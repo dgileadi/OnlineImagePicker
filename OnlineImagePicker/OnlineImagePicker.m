@@ -141,7 +141,9 @@ static NSString *identifier = @"OnlineImagePickerCell";
     }
     
     __weak OnlineImagePickerCell *wcell = cell;
-    [imageInfo loadThumbnailForTargetSize:size completed:^(UIImage *image, NSError *error) {
+    [imageInfo loadThumbnailForTargetSize:size progress:^(double progress) {
+// TODO: maybe show progress
+    } completed:^(UIImage *image, NSError *error) {
         if (!wcell)
             return;
         dispatch_main_sync_safe(^{
