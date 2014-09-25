@@ -12,6 +12,14 @@
 		BD44067219BA08480059F5AC /* OnlineImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = BD44067119BA08480059F5AC /* OnlineImagePicker.m */; };
 		BD67B7FE19D39159005C8FD2 /* OnlineImagePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BD67B7FD19D39159005C8FD2 /* OnlineImagePickerCell.m */; };
 		BD67B80C19D479B4005C8FD2 /* PhotoLibraryRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = BD67B80B19D479B4005C8FD2 /* PhotoLibraryRequestOperation.m */; };
+		BD67B81019D4C9F4005C8FD2 /* OnlineImageManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDACD8AD19C1068F004F112B /* OnlineImageManager.h */; };
+		BD67B81119D4C9F4005C8FD2 /* OnlineImageInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDB4220219C256A60070C4AD /* OnlineImageInfo.h */; };
+		BD67B81219D4C9F4005C8FD2 /* OnlineImageSource.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BD4406A819BA0D950059F5AC /* OnlineImageSource.h */; };
+		BD67B81319D4CB32005C8FD2 /* InstagramUserImagesSource.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDB4220619C25C540070C4AD /* InstagramUserImagesSource.h */; };
+		BD67B81419D4CB32005C8FD2 /* InstagramImageInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDD7783719CCD01700B9F9D3 /* InstagramImageInfo.h */; };
+		BD67B81519D4CB32005C8FD2 /* PhotoLibraryImageSource.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDD7783B19CCD88E00B9F9D3 /* PhotoLibraryImageSource.h */; };
+		BD67B81619D4CB32005C8FD2 /* PhotoLibraryImageInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDD7783E19CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.h */; };
+		BD67B81719D4CB32005C8FD2 /* ALAssetImageInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDD7784119CCDA6300B9F9D3 /* ALAssetImageInfo.h */; };
 		BDACD8AF19C1068F004F112B /* OnlineImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BDACD8AE19C1068F004F112B /* OnlineImageManager.m */; };
 		BDB4220819C25C540070C4AD /* InstagramUserImagesSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BDB4220719C25C540070C4AD /* InstagramUserImagesSource.m */; };
 		BDD7783919CCD01700B9F9D3 /* InstagramImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD7783819CCD01700B9F9D3 /* InstagramImageInfo.m */; };
@@ -28,6 +36,14 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				BD67B81319D4CB32005C8FD2 /* InstagramUserImagesSource.h in CopyFiles */,
+				BD67B81419D4CB32005C8FD2 /* InstagramImageInfo.h in CopyFiles */,
+				BD67B81519D4CB32005C8FD2 /* PhotoLibraryImageSource.h in CopyFiles */,
+				BD67B81619D4CB32005C8FD2 /* PhotoLibraryImageInfo.h in CopyFiles */,
+				BD67B81719D4CB32005C8FD2 /* ALAssetImageInfo.h in CopyFiles */,
+				BD67B81019D4C9F4005C8FD2 /* OnlineImageManager.h in CopyFiles */,
+				BD67B81119D4C9F4005C8FD2 /* OnlineImageInfo.h in CopyFiles */,
+				BD67B81219D4C9F4005C8FD2 /* OnlineImageSource.h in CopyFiles */,
 				BD44067019BA08480059F5AC /* OnlineImagePicker.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

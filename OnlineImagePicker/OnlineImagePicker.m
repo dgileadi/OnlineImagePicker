@@ -38,16 +38,25 @@ static NSString *identifier = @"OnlineImagePickerCell";
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         self.imageManager = [[OnlineImageManager alloc] init];
-        self.imageInfo = [NSMutableArray array];
+        [self initDefaults];
         [self addDefaultImageSources];
     }
     return self;
 }
 
--(id) initWithImageManager:(OnlineImageManager *)manager {
+-(id) initWithDelegate:(id<OnlineImagePickerDelegate>)delegate {
+    
+    if (self = [self initWithDelegate:delegate andImageManager:[[OnlineImageManager alloc] init]]) {
+        [self addDefaultImageSources];
+    }
+    return self;
+}
+
+-(id) initWithDelegate:(id<OnlineImagePickerDelegate>)delegate andImageManager:(OnlineImageManager *)manager {
     if (self = [super init]) {
+        self.pickerDelegate = delegate;
         self.imageManager = manager;
-        self.imageInfo = [NSMutableArray array];
+        [self initDefaults];
     }
     return self;
 }
@@ -56,16 +65,19 @@ static NSString *identifier = @"OnlineImagePickerCell";
  * Initialize the picker with a default set of image sources, including the photo library and user images from popular online services.
  */
 -(id) init {
-    if (self = [self initWithImageManager:[[OnlineImageManager alloc] init]]) {
-        [self addDefaultImageSources];
-    }
+    return [self initWithDelegate:nil];
+}
+
+-(id) initWithDelegate:(id<OnlineImagePickerDelegate>)delegate andImageSources:(NSArray *)imageSources {
+    if (self = [self initWithDelegate:delegate andImageManager:[[OnlineImageManager alloc] init]])
+        [self addImageSourcesFromArray:imageSources];
     return self;
 }
 
--(id) initWithImageSources:(NSArray *)imageSources {
-    if (self = [self initWithImageManager:[[OnlineImageManager alloc] init]])
-        [self addImageSourcesFromArray:imageSources];
-    return self;
+-(void) initDefaults {
+    self.imageInfo = [NSMutableArray array];
+    self.preferredContentSize = CGSizeMake(75, 75);
+    self.cellMargins = CGSizeMake(2, 2);
 }
 
 -(void) addDefaultImageSources {
@@ -109,13 +121,41 @@ static NSString *identifier = @"OnlineImagePickerCell";
     }];
 }
 
+-(void) updateCellLayout {
+    CGFloat width = self.view.bounds.size.width;
+    NSUInteger count = width / self.preferredContentSize.width;
+    CGFloat margins = self.cellMargins.width * (count + 1);
+    CGFloat cellWidth = (width - margins) / count;
+    CGFloat cellHeight = self.preferredContentSize.height;
+    if (ABS(self.preferredContentSize.width - self.preferredContentSize.height) < 0.1)
+        cellHeight = cellWidth;
+    
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.itemSize = CGSizeMake(cellWidth, cellHeight);
+    layout.minimumInteritemSpacing = self.cellMargins.width;
+    layout.minimumLineSpacing = self.cellMargins.height;
+    layout.sectionInset = UIEdgeInsetsZero;
+    self.collectionView.collectionViewLayout = layout;
+}
+
 #pragma mark - UICollectionView
 
 -(void) viewDidLoad {
     [super viewDidLoad];
     [self.collectionView registerClass:[OnlineImagePickerCell class] forCellWithReuseIdentifier:identifier];
+    [self updateCellLayout];
     [self loadImages];
 }
+
+#if __IPHONE_8_0
+-(void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [self updateCellLayout];
+}
+#else
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateCellLayout];
+}
+#endif
 
 #pragma mark - UICollectionViewDataSource
 

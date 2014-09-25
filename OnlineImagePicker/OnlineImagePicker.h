@@ -25,9 +25,13 @@
 
 /**
  * An implementation of UICollectionViewController that supports loading images from online sources like Facebook, Instagram and Flickr.
+ * You must set `pickerDelegate` to get notified when images are picked.
  */
 @interface OnlineImagePicker : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
+/**
+ * A delegate for handling picked images. You must set the delegate to get notified of picked images.
+ */
 @property(weak, nonatomic) id<OnlineImagePickerDelegate> pickerDelegate;
 
 /**
@@ -36,19 +40,34 @@
 @property(nonatomic) BOOL lowResThumbnails;
 
 /**
+ * The preferred size for thumbnail images. The exact size will be adjusted based on the view's size.
+ */
+@property(nonatomic) CGSize preferredThumbnailSize;
+
+/**
+ * The margin between cells.
+ */
+@property(nonatomic) CGSize cellMargins;
+
+/**
  * The OnlineImageManager that loads images from OnlineImageSource objects.
  */
 @property(nonatomic) OnlineImageManager *imageManager;
 
 /**
- * Initialize with objects that implement the OnlineImageSource protocol
+ * Initialize with a delegate.
  */
--(id) initWithImageSources:(NSArray *)imageSources;
+-(id) initWithDelegate:(id<OnlineImagePickerDelegate>)delegate;
 
 /**
- * Initialize with an OnlineImageManager.
+ * Initialize with a delegate and objects that implement the OnlineImageSource protocol.
  */
--(id) initWithImageManager:(OnlineImageManager *)manager;
+-(id) initWithDelegate:(id<OnlineImagePickerDelegate>)delegate andImageSources:(NSArray *)imageSources;
+
+/**
+ * Initialize with a delegate and an OnlineImageManager.
+ */
+-(id) initWithDelegate:(id<OnlineImagePickerDelegate>)delegate andImageManager:(OnlineImageManager *)manager;
 
 /**
  * All the OnlineImageSource objects that provide images for this picker. Forwards to imageManager.

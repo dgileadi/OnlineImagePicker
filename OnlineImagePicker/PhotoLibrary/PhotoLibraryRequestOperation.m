@@ -6,11 +6,10 @@
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
-#if __IPHONE_8_0
-
 #import "PhotoLibraryRequestOperation.h"
 
 @implementation PhotoLibraryRequestOperation
+#if __IPHONE_8_0
 
 - (id)initWithRequestID:(PHImageRequestID)requestID {
     if ((self = [super init])) {
@@ -23,6 +22,5 @@
     [[PHImageManager defaultManager] cancelImageRequest:self.requestID];
 }
 
-@end
-
 #endif
+@end

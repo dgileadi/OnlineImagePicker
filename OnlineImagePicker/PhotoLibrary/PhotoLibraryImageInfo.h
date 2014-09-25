@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
-#if __IPHONE_8_0
-
 #import <Foundation/Foundation.h>
+#if __IPHONE_8_0
 #import <Photos/Photos.h>
+#endif
 #import "OnlineImageInfo.h"
 
 @interface PhotoLibraryImageInfo : NSObject<OnlineImageInfo>
+#if __IPHONE_8_0
 
 @property(nonatomic) PHAsset *asset;
 
 -(id) initWithAsset:(PHAsset *)asset;
 
-@end
-
 #endif
+@end

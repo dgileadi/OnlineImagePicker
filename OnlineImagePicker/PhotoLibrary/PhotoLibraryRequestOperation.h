@@ -6,13 +6,14 @@
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
-#if __IPHONE_8_0
-
 #import <Foundation/Foundation.h>
+#if __IPHONE_8_0
 #import <Photos/Photos.h>
+#endif
 #import "OnlineImageInfo.h"
 
 @interface PhotoLibraryRequestOperation : NSObject <OnlineImageLoad>
+#if __IPHONE_8_0
 
 /**
  * The ID of the request used by the operation.
@@ -28,6 +29,5 @@
  */
 - (id)initWithRequestID:(PHImageRequestID)requestID;
 
-@end
-
 #endif
+@end

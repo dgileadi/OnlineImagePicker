@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
-#if __IPHONE_8_0
 
 #import "PhotoLibraryImageInfo.h"
 #import "PhotoLibraryRequestOperation.h"
 
 @implementation PhotoLibraryImageInfo
+#if __IPHONE_8_0
 
 -(id) initWithAsset:(PHAsset *)asset {
     if (self = [super init])
@@ -68,6 +68,5 @@
     return self.asset;
 }
 
-@end
-
 #endif
+@end
