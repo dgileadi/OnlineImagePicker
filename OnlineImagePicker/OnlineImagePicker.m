@@ -53,7 +53,8 @@ static NSString *identifier = @"OnlineImagePickerCell";
 }
 
 -(id) initWithDelegate:(id<OnlineImagePickerDelegate>)delegate andImageManager:(OnlineImageManager *)manager {
-    if (self = [super init]) {
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    if (self = [super initWithCollectionViewLayout:layout]) {
         self.pickerDelegate = delegate;
         self.imageManager = manager;
         [self initDefaults];
