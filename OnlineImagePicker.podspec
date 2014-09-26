@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.source_files = 'OnlineImagePicker/**'
+  s.source_files = 'OnlineImagePicker/**/*.{h,m}'
 
   s.public_header_files = 'OnlineImagePicker/**/*.h'
   s.frameworks = 'UIKit'
