@@ -11,7 +11,15 @@
 @implementation OnlineImagePickerCell
 
 - (void)layoutSubviews {
+    if (!self.imageView) {
+        self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.imageView.clipsToBounds = YES;
+        [self addSubview:self.imageView];
+    }
+    
     [super layoutSubviews];
+    
     self.imageView.frame = self.bounds;
 }
 

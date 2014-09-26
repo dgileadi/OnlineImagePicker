@@ -60,7 +60,11 @@
 }
 
 -(void) updatePageSize {
-    NSUInteger pageSize = round(((double) self.pageSize) / self.imageSources.count);
+    NSUInteger availableCount = 0;
+    for (id<OnlineImageSource> source in self.sources)
+        if ([source isAvailable])
+            availableCount++;
+    NSUInteger pageSize = round(((double) self.pageSize) / availableCount);
     for (id<OnlineImageSource> source in self.sources)
         source.pageSize = pageSize;
 }

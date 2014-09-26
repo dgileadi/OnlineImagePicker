@@ -137,6 +137,8 @@ static NSString *identifier = @"OnlineImagePickerCell";
     layout.minimumLineSpacing = self.cellMargins.height;
     layout.sectionInset = UIEdgeInsetsZero;
     self.collectionView.collectionViewLayout = layout;
+    
+    self.imageManager.pageSize = count * ceil(self.view.bounds.size.height / cellHeight);
 }
 
 #pragma mark - UICollectionView
@@ -145,6 +147,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
     [super viewDidLoad];
     [self.collectionView registerClass:[OnlineImagePickerCell class] forCellWithReuseIdentifier:identifier];
     [self updateCellLayout];
+    self.collectionView.backgroundColor = [UIColor whiteColor];
     [self loadImages];
 }
 
@@ -187,7 +190,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
     } completed:^(UIImage *image, NSError *error) {
         if (!wcell)
             return;
-        dispatch_main_sync_safe(^{
+//        dispatch_main_sync_safe(^{
             if (image) {
                 wcell.imageView.image = image;
                 [wcell.imageView setNeedsLayout];
@@ -198,7 +201,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
                 
                 NSLog(@"Error loading image: %@", error);
             }
-        });
+//        });
     }];
     
 // TODO: maybe some kind of placeholder, support for progress, support for half-resolution image first...
