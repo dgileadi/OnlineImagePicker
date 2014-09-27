@@ -5,27 +5,31 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>A4D6BC59-9613-45BD-A8F3-A90303795AD2</string>
+	<string>9860887B-7FCD-427C-9B3D-3496080655DE</string>
 	<key>IDESourceControlProjectName</key>
 	<string>OnlineImagePicker</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</key>
 		<string>bitbucket.org:david_gileadi/quickscrap.git</string>
+		<key>DEDBC36E425A0652C759D5F4DFCF0EBBFD95EB80</key>
+		<string>github.com:dgileadi/OnlineImagePicker.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>OnlineImagePicker/OnlineImagePicker.xcodeproj</string>
+	<string>Example/OnlineImagePicker.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</key>
 		<string>../../..</string>
+		<key>DEDBC36E425A0652C759D5F4DFCF0EBBFD95EB80</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>bitbucket.org:david_gileadi/quickscrap.git</string>
+	<string>github.com:dgileadi/OnlineImagePicker.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</string>
+	<string>DEDBC36E425A0652C759D5F4DFCF0EBBFD95EB80</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -34,7 +38,15 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>3FA041585F3478539B1E98B460D6CEFA49B8AAD6</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Quickscrap</string>
+			<string></string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DEDBC36E425A0652C759D5F4DFCF0EBBFD95EB80</string>
+			<key>IDESourceControlWCCName</key>
+			<string>OnlineImagePicker</string>
 		</dict>
 	</array>
 </dict>
