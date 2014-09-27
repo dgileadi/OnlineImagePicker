@@ -11,12 +11,15 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'OnlineImagePicker/**/*.{h,m}'
+  s.ios.resource_bundle = { 'OnlineImagePicker' => ['OnlineImagePicker/Localization/*.lproj'] }
 
   s.public_header_files = 'OnlineImagePicker/**/*.h'
+
   s.frameworks = 'UIKit'
   s.dependency 'Dropbox-iOS-SDK'
   s.dependency 'Facebook-iOS-SDK'
   s.dependency 'FlickrKit'
   s.dependency 'InstagramKit'
   s.dependency 'SDWebImage'
+  s.dependency 'M13ProgressSuite'
 end

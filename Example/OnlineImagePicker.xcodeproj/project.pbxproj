@@ -65,7 +65,6 @@
 		970E8CCD970EB28DE390B8D0 /* libPods-OnlineImagePicker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineImagePicker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A520093EE4F47E7F8AD0CE9A /* Pods-OnlineImagePicker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineImagePicker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnlineImagePicker/Pods-OnlineImagePicker.debug.xcconfig"; sourceTree = "<group>"; };
 		A90B99FFF7DB01204A5829CE /* OnlineImagePicker.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = OnlineImagePicker.podspec; path = ../OnlineImagePicker.podspec; sourceTree = "<group>"; };
-		BA74FAF10157C724BEBFEC10 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		BD67B84F19D70849005C8FD2 /* OnlineImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageInfo.h; path = ../OnlineImagePicker/OnlineImageInfo.h; sourceTree = "<group>"; };
 		BD67B85019D70849005C8FD2 /* OnlineImageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageManager.h; path = ../OnlineImagePicker/OnlineImageManager.h; sourceTree = "<group>"; };
 		BD67B85119D70849005C8FD2 /* OnlineImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImagePicker.h; path = ../OnlineImagePicker/OnlineImagePicker.h; sourceTree = "<group>"; };
@@ -93,6 +92,10 @@
 		BD67B86E19D708C5005C8FD2 /* PhotoLibraryImageSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoLibraryImageSource.m; sourceTree = "<group>"; };
 		BD67B86F19D708C5005C8FD2 /* PhotoLibraryRequestOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoLibraryRequestOperation.h; sourceTree = "<group>"; };
 		BD67B87019D708C5005C8FD2 /* PhotoLibraryRequestOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoLibraryRequestOperation.m; sourceTree = "<group>"; };
+		BD67B87219D711B4005C8FD2 /* InstagramPopularImagesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramPopularImagesSource.h; sourceTree = "<group>"; };
+		BD67B87319D711B4005C8FD2 /* InstagramPopularImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramPopularImagesSource.m; sourceTree = "<group>"; };
+		BD67B87419D7252E005C8FD2 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE.txt; path = ../LICENSE.txt; sourceTree = "<group>"; };
+		BD67B87619D73600005C8FD2 /* Localization */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Localization; path = ../OnlineImagePicker/Localization; sourceTree = "<group>"; };
 		BE89399133026A00DB1C59C6 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,6 +136,7 @@
 				BD67B86219D708AD005C8FD2 /* Flickr */,
 				BD67B86319D708B7005C8FD2 /* Instagram */,
 				BD67B86819D708C5005C8FD2 /* PhotoLibrary */,
+				BD67B87619D73600005C8FD2 /* Localization */,
 				6003F593195388D20070C39A /* Example */,
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
@@ -214,7 +218,7 @@
 			children = (
 				A90B99FFF7DB01204A5829CE /* OnlineImagePicker.podspec */,
 				BE89399133026A00DB1C59C6 /* README.md */,
-				BA74FAF10157C724BEBFEC10 /* LICENSE */,
+				BD67B87419D7252E005C8FD2 /* LICENSE.txt */,
 			);
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
@@ -267,10 +271,12 @@
 		BD67B86319D708B7005C8FD2 /* Instagram */ = {
 			isa = PBXGroup;
 			children = (
-				BD67B86419D708B7005C8FD2 /* InstagramImageInfo.h */,
-				BD67B86519D708B7005C8FD2 /* InstagramImageInfo.m */,
 				BD67B86619D708B7005C8FD2 /* InstagramUserImagesSource.h */,
 				BD67B86719D708B7005C8FD2 /* InstagramUserImagesSource.m */,
+				BD67B87219D711B4005C8FD2 /* InstagramPopularImagesSource.h */,
+				BD67B87319D711B4005C8FD2 /* InstagramPopularImagesSource.m */,
+				BD67B86419D708B7005C8FD2 /* InstagramImageInfo.h */,
+				BD67B86519D708B7005C8FD2 /* InstagramImageInfo.m */,
 			);
 			name = Instagram;
 			path = ../OnlineImagePicker/Instagram;
@@ -279,12 +285,12 @@
 		BD67B86819D708C5005C8FD2 /* PhotoLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				BD67B86D19D708C5005C8FD2 /* PhotoLibraryImageSource.h */,
+				BD67B86E19D708C5005C8FD2 /* PhotoLibraryImageSource.m */,
 				BD67B86919D708C5005C8FD2 /* ALAssetImageInfo.h */,
 				BD67B86A19D708C5005C8FD2 /* ALAssetImageInfo.m */,
 				BD67B86B19D708C5005C8FD2 /* PhotoLibraryImageInfo.h */,
 				BD67B86C19D708C5005C8FD2 /* PhotoLibraryImageInfo.m */,
-				BD67B86D19D708C5005C8FD2 /* PhotoLibraryImageSource.h */,
-				BD67B86E19D708C5005C8FD2 /* PhotoLibraryImageSource.m */,
 				BD67B86F19D708C5005C8FD2 /* PhotoLibraryRequestOperation.h */,
 				BD67B87019D708C5005C8FD2 /* PhotoLibraryRequestOperation.m */,
 			);

@@ -32,11 +32,13 @@ PODS:
   - FlickrKit (1.0.4)
   - InstagramKit (3.5.0):
     - AFNetworking (~> 2.0)
+  - M13ProgressSuite (1.2.5)
   - OnlineImagePicker (0.1.0):
     - Dropbox-iOS-SDK
     - Facebook-iOS-SDK
     - FlickrKit
     - InstagramKit
+    - M13ProgressSuite
     - SDWebImage
   - SDWebImage (3.7.1):
     - SDWebImage/Core
@@ -64,7 +66,8 @@ SPEC CHECKSUMS:
   FBSnapshotTestCase: 4159bdf235fdae25aa7d813f1452a4f05ad4f9cd
   FlickrKit: 1bbc5c91f065fa0d7ce4119c5d5c63a9241eea73
   InstagramKit: f96f2e6ec35efe6c2bfc33b63b2ba56d9856c0c9
-  OnlineImagePicker: 4286ce9abac28c7e2ece9f360adb1b20597becd9
+  M13ProgressSuite: bf63f5592f1e40767da5203199804ad5eed3eb48
+  OnlineImagePicker: 337d2e81051c56c89fd6c40b623736d8f137ca12
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
   Specta: 9141310f46b1f68b676650ff2854e1ed0b74163a
 

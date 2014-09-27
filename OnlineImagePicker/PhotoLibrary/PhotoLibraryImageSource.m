@@ -66,7 +66,10 @@
 }
 
 -(void) updateGroupPageSize {
-    self.groupPageSize = MAX(1, self.pageSize / self.assetsGroups.count);
+    if (self.assetsGroups.count)
+        self.groupPageSize = MAX(1, self.pageSize / self.assetsGroups.count);
+    else
+        self.groupPageSize = 1;
 }
 
 -(BOOL) isAvailable {

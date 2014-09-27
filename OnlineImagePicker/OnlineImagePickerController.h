@@ -19,6 +19,7 @@
 @protocol OnlineImagePickerDelegate <NSObject>
 
 -(void) imagePickedWithInfo:(id<OnlineImageInfo>)info andThumbnail:(UIImage *)thumbnail;
+-(void) cancelledPicker;
 
 @end
 
@@ -27,7 +28,7 @@
  * An implementation of UICollectionViewController that supports loading images from online sources like Facebook, Instagram and Flickr.
  * You must set `pickerDelegate` to get notified when images are picked.
  */
-@interface OnlineImagePickerController : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface OnlineImagePickerController : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIToolbarDelegate>
 
 /**
  * A delegate for handling picked images. You must set the delegate to get notified of picked images.
@@ -35,17 +36,23 @@
 @property(weak, nonatomic) id<OnlineImagePickerDelegate> pickerDelegate;
 
 /**
- * Whether to load low-resolution image on retina displays. Defaults to NO, meaning thumbnail images will be loaded at retina resolution when possible.
+ * A toolbar for displaying Cancel and Accounts buttons.
  */
-@property(nonatomic) BOOL lowResThumbnails;
+@property(nonatomic) IBOutlet UIToolbar *toolbar;
 
 /**
- * The preferred size for thumbnail images. The exact size will be adjusted based on the view's size.
+ * Whether to load high-resolution image on retina displays. Defaults to NO, meaning thumbnail images will generally be loaded at non-retina resolution.
+ * Also note that not all image sources support high-resolution thumbnails.
+ */
+@property(nonatomic) BOOL highResThumbnails;
+
+/**
+ * The preferred size for thumbnail images. The exact size will be adjusted based on the view's size. Defaults to 70x70.
  */
 @property(nonatomic) CGSize preferredThumbnailSize;
 
 /**
- * The margin between cells.
+ * The margin between cells. Defaults to 2x2.
  */
 @property(nonatomic) CGSize cellMargins;
 

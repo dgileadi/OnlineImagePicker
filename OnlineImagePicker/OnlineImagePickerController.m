@@ -10,10 +10,11 @@
 #import "OnlineImagePickerCell.h"
 #import "PhotoLibraryImageSource.h"
 #import "InstagramUserImagesSource.h"
+#import "InstagramPopularImagesSource.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 
-static NSString *identifier = @"OnlineImagePickerCell";
+static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 
 
 @interface OnlineImagePickerController()
@@ -84,6 +85,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
 -(void) addDefaultImageSources {
     [self addImageSource:[[PhotoLibraryImageSource alloc] init]];
     [self addImageSource:[[InstagramUserImagesSource alloc] init]];
+    [self addImageSource:[[InstagramPopularImagesSource alloc] init]];
     // TODO: Facebook, Flickr, Dropbox user images
 }
 
@@ -125,7 +127,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
 -(void) updateCellLayout {
     CGFloat width = self.view.bounds.size.width;
     NSUInteger count = width / self.preferredContentSize.width;
-    CGFloat margins = self.cellMargins.width * (count + 1);
+    CGFloat margins = self.cellMargins.width * (count - 1);
     CGFloat cellWidth = (width - margins) / count;
     CGFloat cellHeight = self.preferredContentSize.height;
     if (ABS(self.preferredContentSize.width - self.preferredContentSize.height) < 0.1)
@@ -141,14 +143,51 @@ static NSString *identifier = @"OnlineImagePickerCell";
     self.imageManager.pageSize = count * ceil(self.view.bounds.size.height / cellHeight);
 }
 
+-(void) createToolbar {
+    UIToolbar *toolbar = [[UIToolbar alloc] init];
+    toolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    toolbar.delegate = self;
+    
+    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"OnlineImagePicker" ofType:@"bundle"]];
+    
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelSelectAccounts)];
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    NSString *title = [bundle localizedStringForKey:@"AccountsBarButton" value:@"Accounts" table:nil];
+    UIBarButtonItem *accounts = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(showSelectAccounts)];
+    toolbar.items = [NSArray arrayWithObjects:cancel, space, accounts, nil];
+    
+    self.toolbar = toolbar;
+    [self.view addSubview:toolbar];
+    
+    id topGuide = self.topLayoutGuide;
+    NSDictionary *views = NSDictionaryOfVariableBindings(topGuide, toolbar);
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[toolbar]|" options:0 metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[toolbar]" options:0 metrics:nil views:views]];
+}
+
+-(void) showSelectAccounts {
+    
+}
+
+-(void) cancelSelectAccounts {
+    [self.pickerDelegate cancelledPicker];
+}
+
 #pragma mark - UICollectionView
 
 -(void) viewDidLoad {
     [super viewDidLoad];
-    [self.collectionView registerClass:[OnlineImagePickerCell class] forCellWithReuseIdentifier:identifier];
+    [self.collectionView registerClass:[OnlineImagePickerCell class] forCellWithReuseIdentifier:kCellIdentifier];
     [self updateCellLayout];
+    if (!self.toolbar)
+        [self createToolbar];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     [self loadImages];
+}
+
+-(void) viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.toolbar.bounds.size.height + [self.topLayoutGuide length], 0, 0, 0);
 }
 
 #if __IPHONE_8_0
@@ -170,40 +209,13 @@ static NSString *identifier = @"OnlineImagePickerCell";
 #pragma mark - UICollectionViewDelegate
 
 -(UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    OnlineImagePickerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    OnlineImagePickerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
     
     id<OnlineImageInfo> imageInfo = [self.imageInfo objectAtIndex:indexPath.item];
     cell.imageInfo = imageInfo;
     
-    [cell.imageView sd_cancelCurrentImageLoad];
-    cell.imageView.image = nil;
-    
-    CGSize size = cell.bounds.size;
-    if (!self.lowResThumbnails) {
-        CGFloat scale = self.view.window.screen.scale;
-        if (scale > 1)
-            size = CGSizeMake(size.width * scale, size.height * scale);
-    }
-    
-    __weak OnlineImagePickerCell *wcell = cell;
-    [imageInfo loadThumbnailForTargetSize:size progress:^(double progress) {
-// TODO: maybe show progress
-    } completed:^(UIImage *image, NSError *error) {
-        if (!wcell)
-            return;
-        dispatch_main_sync_safe(^{
-            if (image) {
-                wcell.imageView.image = image;
-                [wcell.imageView setNeedsLayout];
-            }
-            if (error) {
-// TODO: what?
-                
-                
-                NSLog(@"Error loading image: %@", error);
-            }
-        });
-    }];
+    CGFloat scale = self.highResThumbnails ? self.view.window.screen.scale : 1;
+    [cell loadImageAtScale:scale];
     
 // TODO: maybe some kind of placeholder, support for progress, support for half-resolution image first...
     
@@ -216,6 +228,12 @@ static NSString *identifier = @"OnlineImagePickerCell";
         OnlineImagePickerCell *cell = (OnlineImagePickerCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
         [self.pickerDelegate imagePickedWithInfo:cell.imageInfo andThumbnail:cell.imageView.image];
     }
+}
+
+#pragma mark - UIToolbarDelegate
+
+-(UIBarPosition) positionForBar:(id<UIBarPositioning>)bar {
+    return UIBarPositionTopAttached;
 }
 
 @end
