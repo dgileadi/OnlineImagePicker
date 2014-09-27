@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		9DFDCA02F36F4BD98369CFFC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FE8D751BAA43EA922A4C44 /* libPods.a */; };
 		BD44067019BA08480059F5AC /* OnlineImagePicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BD44066F19BA08480059F5AC /* OnlineImagePicker.h */; };
-		BD44067219BA08480059F5AC /* OnlineImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = BD44067119BA08480059F5AC /* OnlineImagePicker.m */; };
+		BD44067219BA08480059F5AC /* OnlineImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD44067119BA08480059F5AC /* OnlineImagePickerController.m */; };
 		BD67B7FE19D39159005C8FD2 /* OnlineImagePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BD67B7FD19D39159005C8FD2 /* OnlineImagePickerCell.m */; };
 		BD67B80C19D479B4005C8FD2 /* PhotoLibraryRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = BD67B80B19D479B4005C8FD2 /* PhotoLibraryRequestOperation.m */; };
 		BD67B81019D4C9F4005C8FD2 /* OnlineImageManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDACD8AD19C1068F004F112B /* OnlineImageManager.h */; };
@@ -20,6 +20,8 @@
 		BD67B81519D4CB32005C8FD2 /* PhotoLibraryImageSource.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDD7783B19CCD88E00B9F9D3 /* PhotoLibraryImageSource.h */; };
 		BD67B81619D4CB32005C8FD2 /* PhotoLibraryImageInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDD7783E19CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.h */; };
 		BD67B81719D4CB32005C8FD2 /* ALAssetImageInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BDD7784119CCDA6300B9F9D3 /* ALAssetImageInfo.h */; };
+		BD67B84919D700FC005C8FD2 /* OnlineImageAccountsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD67B84819D700FB005C8FD2 /* OnlineImageAccountsManager.m */; };
+		BD67B84D19D702B1005C8FD2 /* OnlineImageAccountsController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD67B84C19D702B1005C8FD2 /* OnlineImageAccountsController.m */; };
 		BDACD8AF19C1068F004F112B /* OnlineImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BDACD8AE19C1068F004F112B /* OnlineImageManager.m */; };
 		BDB4220819C25C540070C4AD /* InstagramUserImagesSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BDB4220719C25C540070C4AD /* InstagramUserImagesSource.m */; };
 		BDD7783919CCD01700B9F9D3 /* InstagramImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD7783819CCD01700B9F9D3 /* InstagramImageInfo.m */; };
@@ -55,12 +57,17 @@
 		73151A64C6BF4B10B793F7D2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		BD44066C19BA08480059F5AC /* libOnlineImagePicker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOnlineImagePicker.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD44066F19BA08480059F5AC /* OnlineImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnlineImagePicker.h; sourceTree = "<group>"; };
-		BD44067119BA08480059F5AC /* OnlineImagePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnlineImagePicker.m; sourceTree = "<group>"; };
+		BD44067119BA08480059F5AC /* OnlineImagePickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnlineImagePickerController.m; sourceTree = "<group>"; };
 		BD4406A819BA0D950059F5AC /* OnlineImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineImageSource.h; sourceTree = "<group>"; };
 		BD67B7FC19D39159005C8FD2 /* OnlineImagePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineImagePickerCell.h; sourceTree = "<group>"; };
 		BD67B7FD19D39159005C8FD2 /* OnlineImagePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnlineImagePickerCell.m; sourceTree = "<group>"; };
 		BD67B80A19D479B4005C8FD2 /* PhotoLibraryRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoLibraryRequestOperation.h; path = OnlineImagePicker/PhotoLibrary/PhotoLibraryRequestOperation.h; sourceTree = "<group>"; };
 		BD67B80B19D479B4005C8FD2 /* PhotoLibraryRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoLibraryRequestOperation.m; path = OnlineImagePicker/PhotoLibrary/PhotoLibraryRequestOperation.m; sourceTree = "<group>"; };
+		BD67B84719D700FB005C8FD2 /* OnlineImageAccountsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnlineImageAccountsManager.h; path = OnlineImagePicker/OnlineImageAccountsManager.h; sourceTree = "<group>"; };
+		BD67B84819D700FB005C8FD2 /* OnlineImageAccountsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OnlineImageAccountsManager.m; path = OnlineImagePicker/OnlineImageAccountsManager.m; sourceTree = "<group>"; };
+		BD67B84A19D7015A005C8FD2 /* OnlineImagePickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnlineImagePickerController.h; sourceTree = "<group>"; };
+		BD67B84B19D702B1005C8FD2 /* OnlineImageAccountsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnlineImageAccountsController.h; path = OnlineImagePicker/OnlineImageAccountsController.h; sourceTree = "<group>"; };
+		BD67B84C19D702B1005C8FD2 /* OnlineImageAccountsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OnlineImageAccountsController.m; path = OnlineImagePicker/OnlineImageAccountsController.m; sourceTree = "<group>"; };
 		BDACD8AD19C1068F004F112B /* OnlineImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineImageManager.h; sourceTree = "<group>"; };
 		BDACD8AE19C1068F004F112B /* OnlineImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnlineImageManager.m; sourceTree = "<group>"; };
 		BDB4220219C256A60070C4AD /* OnlineImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnlineImageInfo.h; sourceTree = "<group>"; };
@@ -102,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				BD44066E19BA08480059F5AC /* OnlineImagePicker */,
+				BD67B84619D700AD005C8FD2 /* Accounts */,
 				BD67B7F719D31972005C8FD2 /* Dropbox */,
 				BDB4220419C25C060070C4AD /* Facebook */,
 				BDB4220519C25C100070C4AD /* Flickr */,
@@ -125,7 +133,8 @@
 			isa = PBXGroup;
 			children = (
 				BD44066F19BA08480059F5AC /* OnlineImagePicker.h */,
-				BD44067119BA08480059F5AC /* OnlineImagePicker.m */,
+				BD67B84A19D7015A005C8FD2 /* OnlineImagePickerController.h */,
+				BD44067119BA08480059F5AC /* OnlineImagePickerController.m */,
 				BDACD8AD19C1068F004F112B /* OnlineImageManager.h */,
 				BDACD8AE19C1068F004F112B /* OnlineImageManager.m */,
 				BDB4220219C256A60070C4AD /* OnlineImageInfo.h */,
@@ -143,6 +152,17 @@
 			children = (
 			);
 			name = Dropbox;
+			sourceTree = "<group>";
+		};
+		BD67B84619D700AD005C8FD2 /* Accounts */ = {
+			isa = PBXGroup;
+			children = (
+				BD67B84B19D702B1005C8FD2 /* OnlineImageAccountsController.h */,
+				BD67B84C19D702B1005C8FD2 /* OnlineImageAccountsController.m */,
+				BD67B84719D700FB005C8FD2 /* OnlineImageAccountsManager.h */,
+				BD67B84819D700FB005C8FD2 /* OnlineImageAccountsManager.m */,
+			);
+			name = Accounts;
 			sourceTree = "<group>";
 		};
 		BDB4220319C25BF30070C4AD /* Instagram */ = {
@@ -281,10 +301,12 @@
 				BDD7783D19CCD88E00B9F9D3 /* PhotoLibraryImageSource.m in Sources */,
 				BDACD8AF19C1068F004F112B /* OnlineImageManager.m in Sources */,
 				BD67B7FE19D39159005C8FD2 /* OnlineImagePickerCell.m in Sources */,
+				BD67B84919D700FC005C8FD2 /* OnlineImageAccountsManager.m in Sources */,
 				BDD7784019CCD8AC00B9F9D3 /* PhotoLibraryImageInfo.m in Sources */,
 				BD67B80C19D479B4005C8FD2 /* PhotoLibraryRequestOperation.m in Sources */,
-				BD44067219BA08480059F5AC /* OnlineImagePicker.m in Sources */,
+				BD44067219BA08480059F5AC /* OnlineImagePickerController.m in Sources */,
 				BDD7784319CCDA6300B9F9D3 /* ALAssetImageInfo.m in Sources */,
+				BD67B84D19D702B1005C8FD2 /* OnlineImageAccountsController.m in Sources */,
 				BDD7784619CCEE4E00B9F9D3 /* SDWebImageInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

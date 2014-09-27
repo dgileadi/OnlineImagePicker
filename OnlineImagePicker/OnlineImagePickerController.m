@@ -1,12 +1,12 @@
 //
-//  OnlineImagePicker.m
+//  OnlineImagePickerController.m
 //  OnlineImagePicker
 //
 //  Created by David Gileadi on 9/5/14.
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
-#import "OnlineImagePicker.h"
+#import "OnlineImagePickerController.h"
 #import "OnlineImagePickerCell.h"
 #import "PhotoLibraryImageSource.h"
 #import "InstagramUserImagesSource.h"
@@ -16,14 +16,14 @@
 static NSString *identifier = @"OnlineImagePickerCell";
 
 
-@interface OnlineImagePicker()
+@interface OnlineImagePickerController()
 
 @property(nonatomic) NSMutableArray *imageInfo;
 
 @end
 
 
-@implementation OnlineImagePicker
+@implementation OnlineImagePickerController
 
 /*
  SDWebImageDownloader *downloader = [SDWebImageManager sharedManager].imageDownloader;
@@ -156,7 +156,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
     [self updateCellLayout];
 }
 #else
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration {
+-(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration {
     [self updateCellLayout];
 }
 #endif
@@ -176,6 +176,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
     cell.imageInfo = imageInfo;
     
     [cell.imageView sd_cancelCurrentImageLoad];
+    cell.imageView.image = nil;
     
     CGSize size = cell.bounds.size;
     if (!self.lowResThumbnails) {
@@ -190,7 +191,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
     } completed:^(UIImage *image, NSError *error) {
         if (!wcell)
             return;
-//        dispatch_main_sync_safe(^{
+        dispatch_main_sync_safe(^{
             if (image) {
                 wcell.imageView.image = image;
                 [wcell.imageView setNeedsLayout];
@@ -201,7 +202,7 @@ static NSString *identifier = @"OnlineImagePickerCell";
                 
                 NSLog(@"Error loading image: %@", error);
             }
-//        });
+        });
     }];
     
 // TODO: maybe some kind of placeholder, support for progress, support for half-resolution image first...
