@@ -4,3 +4,7 @@
 */
 
 "AccountsBarButton" = "Accounts";
+"AccountLogin" = "Sign In";
+"AccountLogout" = "Sign Out";
+
+"InstagramAccount" = "Instagram";

@@ -99,7 +99,7 @@
 }
 
 -(SDWebImageOptions) options {
-    return 0;
+    return SDWebImageHandleCookies;
 }
 
 @end

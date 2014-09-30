@@ -150,7 +150,7 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     
     NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"OnlineImagePicker" ofType:@"bundle"]];
     
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelSelectAccounts)];
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPicker)];
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     NSString *title = [bundle localizedStringForKey:@"AccountsBarButton" value:@"Accounts" table:nil];
     UIBarButtonItem *accounts = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(showSelectAccounts)];
@@ -166,10 +166,10 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 }
 
 -(void) showSelectAccounts {
-    
+// TODO
 }
 
--(void) cancelSelectAccounts {
+-(void) cancelPicker {
     [self.pickerDelegate cancelledPicker];
 }
 

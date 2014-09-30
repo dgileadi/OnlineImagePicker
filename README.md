@@ -60,7 +60,7 @@ So, here are guides for setting up the various online accounts:
 Setting up Facebook
 -------------------
 
-Facebook has a [handy guide for getting started on iOS](https://developers.facebook.com/docs/ios/getting-started). Follow it, but skip step 2 (for installing the SDK) since it's handled by Cocoapods. Likewise skip the part in step 4 that talks about adding the SDK to your Xcode project.
+Facebook has a [handy guide for getting started on iOS](https://developers.facebook.com/docs/ios/getting-started). Follow it, but skip step 2 (for installing the SDK) since it's handled by Cocoapods. For the same reason skip the part in step 4 that talks about adding the SDK to your Xcode project.
 
 You'll also need to make your AppDelegate forward to Facebook for login, something like:
 
