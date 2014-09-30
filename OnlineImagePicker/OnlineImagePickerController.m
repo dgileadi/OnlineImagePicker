@@ -8,6 +8,7 @@
 
 #import "OnlineImagePickerController.h"
 #import "OnlineImagePickerCell.h"
+#import "OnlineImageAccountsController.h"
 #import "PhotoLibraryImageSource.h"
 #import "InstagramUserImagesSource.h"
 #import "InstagramPopularImagesSource.h"
@@ -148,12 +149,9 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     toolbar.translatesAutoresizingMaskIntoConstraints = NO;
     toolbar.delegate = self;
     
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"OnlineImagePicker" ofType:@"bundle"]];
-    
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPicker)];
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    NSString *title = [bundle localizedStringForKey:@"AccountsBarButton" value:@"Accounts" table:nil];
-    UIBarButtonItem *accounts = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(showSelectAccounts)];
+    UIBarButtonItem *accounts = [[UIBarButtonItem alloc] initWithTitle:[self accountsButtonTitle] style:UIBarButtonItemStylePlain target:self action:@selector(showSelectAccounts)];
     toolbar.items = [NSArray arrayWithObjects:cancel, space, accounts, nil];
     
     self.toolbar = toolbar;
@@ -165,8 +163,25 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[toolbar]" options:0 metrics:nil views:views]];
 }
 
+-(NSString *) accountsButtonTitle {
+    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"OnlineImagePicker" ofType:@"bundle"]];
+    
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    NSUInteger activeCount = 0;
+    for (id<OnlineImageAccount> account in self.imageManager.accounts)
+        if ([account isLoggedIn])
+            activeCount++;
+    NSString *active = [numberFormatter stringFromNumber:[NSNumber numberWithUnsignedInteger:activeCount]];
+    NSString *total = [numberFormatter stringFromNumber:[NSNumber numberWithUnsignedInteger:self.imageManager.accounts.count]];
+    
+    NSString *titleFormat = [bundle localizedStringForKey:@"AccountsBarButton" value:@"Accounts (%@/%@)" table:nil];
+    return [NSString stringWithFormat:titleFormat, active, total];
+}
+
 -(void) showSelectAccounts {
-// TODO
+    OnlineImageAccountsController *accountsController = [[OnlineImageAccountsController alloc] initWithAccounts:self.imageManager.accounts];
+    [self presentViewController:accountsController animated:YES completion:nil];
 }
 
 -(void) cancelPicker {

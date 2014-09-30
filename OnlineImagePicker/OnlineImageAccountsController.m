@@ -27,9 +27,22 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 @implementation OnlineImageAccountsController
 
 -(id) init {
+    return [self initWithAccounts:nil];
+}
+
+-(id) initWithAccounts:(NSArray *)accounts {
     OnlineImageAccountsTableController *tableController = [[OnlineImageAccountsTableController alloc] init];
-    self = [super initWithRootViewController:tableController];
+    tableController.accounts = accounts;
+    if (self = [super initWithRootViewController:tableController])
+        [self setAccounts:accounts];
     return self;
+}
+
+-(void) setAccounts:(NSArray *)accounts {
+    _accounts = [accounts sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [[obj1 description] compare:[obj2 description]];
+    }];
+    ((OnlineImageAccountsTableController *) [self.viewControllers objectAtIndex:0]).accounts = _accounts;
 }
 
 @end
@@ -39,11 +52,13 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc ] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(doneManagingAccounts)];
+    self.navigationItem.rightBarButtonItem = doneButton;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void) doneManagingAccounts {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Table view data source
@@ -55,7 +70,6 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.accounts.count;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
@@ -79,6 +93,21 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
+}
+
+-(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    id<OnlineImageAccount> account = [self.accounts objectAtIndex:indexPath.row];
+    if ([account isLoggedIn])
+        [account logout];
+    else
+        [account loginFromController:self.navigationController thenCall:^(NSError *error, id<OnlineImageAccount> account) {
+            if (error) {
+// TODO: what?
+                
+                NSLog(@"Error logging in: %@", error);
+            }
+            [self.tableView reloadData];
+        }];
 }
 
 /*

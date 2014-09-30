@@ -7,30 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@protocol OnlineImageAccount;
-
-/**
- * Called when a page of results is returned from an image source.
- * The parameters are an array of OnlineImageInfo objects, up to pageSize in length, and the source of the results.
- */
-typedef void(^OnlineAccountLoginComplete)(NSError *error, id<OnlineImageAccount>account);
-
+#import "OnlineImageAccount.h"
 
 /**
- * Implement this protocol to support authenticating to an online account.
+ * A controller for listing online accounts, and allowing users to log in and out of them.
  */
-@protocol OnlineImageAccount <NSObject>
-
--(UIImage *) icon;
--(NSString *) description;
--(BOOL) isLoggedIn;
--(void) loginFromController:(UINavigationController *)navigationController thenCall:(OnlineAccountLoginComplete)completed;
--(void) logout;
-
-@end
-
-
 @interface OnlineImageAccountsController : UINavigationController
+
+/** The accounts this controller manages. */
+@property(nonatomic) NSArray *accounts;
+
+/** A toolbar for displaying the Done button. */
+@property(nonatomic) IBOutlet UIToolbar *toolbar;
+
+/**
+ * Initialize this controller with the given accounts.
+ */
+-(id) initWithAccounts:(NSArray *)accounts;
 
 @end

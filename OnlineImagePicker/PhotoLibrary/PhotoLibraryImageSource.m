@@ -83,6 +83,10 @@
 #endif
 }
 
+-(id<OnlineImageAccount>) account {
+    return nil;
+}
+
 -(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
     self.index = 0;
     return [self nextImagesWithSuccess:onSuccess orFailure:onFailure];

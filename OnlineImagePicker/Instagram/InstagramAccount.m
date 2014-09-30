@@ -11,6 +11,9 @@
 #import <InstagramKit/InstagramEngine.h>
 
 
+static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramAccessToken";
+
+
 @interface InstagramLoginController : UIViewController <UIWebViewDelegate>
 
 @property(nonatomic, weak) UIWebView *webView;
@@ -23,6 +26,23 @@
 
 
 @implementation InstagramAccount
+
++(InstagramAccount *) sharedInstance {
+    static InstagramAccount *_sharedInstance = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        _sharedInstance = [[InstagramAccount alloc] init];
+    });
+    return _sharedInstance;
+}
+
++(NSString *) storedAccessToken {
+    return [[NSUserDefaults standardUserDefaults] stringForKey:kInstagramAccessTokenKey];
+}
+
++(void) setStoredAccessToken:(NSString *)token {
+    [[NSUserDefaults standardUserDefaults] setObject:token forKey:kInstagramAccessTokenKey];
+}
 
 -(UIImage *) icon {
     return [UIImage imageWithContentsOfFile:[[self bundle] pathForResource:@"InstagramIcon" ofType:@"png"]];
@@ -37,6 +57,9 @@
 }
 
 -(BOOL) isLoggedIn {
+    if (![[InstagramEngine sharedEngine] accessToken]) {
+        [[InstagramEngine sharedEngine] setAccessToken:[InstagramAccount storedAccessToken]];
+    }
     return [[InstagramEngine sharedEngine] accessToken] != nil;
 }
 
@@ -48,8 +71,7 @@
 -(void) logout {
     // TODO: once InstagramKit releases a new version, use the logout method from InstagramEngine instead
     
-    //    Clear all cookies so the next time the user wishes to switch accounts,
-    //    they can do so
+    //    Clear all cookies so the next time the user wishes to switch accounts, they can do so
     NSHTTPCookie *cookie;
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     for (cookie in [storage cookies]) {
@@ -58,6 +80,7 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [InstagramEngine sharedEngine].accessToken = nil;
+    [InstagramAccount setStoredAccessToken:nil];
 }
 
 @end
@@ -106,6 +129,7 @@
             NSString *accessToken = [components lastObject];
 NSLog(@"Instagram ACCESS TOKEN = %@", accessToken);
             [[InstagramEngine sharedEngine] setAccessToken:accessToken];
+            [InstagramAccount setStoredAccessToken:accessToken];
             
             [self.navigationController popViewControllerAnimated:YES];
             self.completedBlock(nil, self.account);

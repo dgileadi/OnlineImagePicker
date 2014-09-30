@@ -10,6 +10,7 @@
 #import "OnlineImageSource.h"
 #import "OnlineImageManager.h"
 #import "OnlineImageInfo.h"
+#import "OnlineImageAccount.h"
 #import "OnlineImageAccountsController.h"
 #import "OnlineImageAccountsManager.h"
 

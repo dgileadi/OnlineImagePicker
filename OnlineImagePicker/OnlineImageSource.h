@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
-@protocol OnlineImageSource;
+#import "OnlineImageAccount.h"
+
 
 /**
  * Called when a page of results is returned from an image source.
@@ -31,6 +32,9 @@ typedef void (^OnlineImageSourceFailureBlock)(NSError* error);
 
 /** Whether the image source is available. An image source that requires authentication may be unavailable if credentials haven't been provided, for example. */
 -(BOOL) isAvailable;
+
+/** Returns the account required by this OnlineImageSource or `nil` if no user account is required. */
+-(id<OnlineImageAccount>) account;
 
 /**
  * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImagesWithSuccess:orFailure:.

@@ -12,6 +12,7 @@
 @interface OnlineImageManager()
 
 @property(nonatomic) NSMutableArray *sources;
+@property(nonatomic) NSMutableArray *accounts;
 
 @end
 
@@ -20,6 +21,7 @@
 -(id) init {
     if (self = [super init]) {
         self.sources = [NSMutableArray array];
+        self.accounts = [NSMutableArray array];
         self.pageSize = 30;
     }
     return self;
@@ -37,36 +39,55 @@
 
 -(void) addImageSource:(id<OnlineImageSource>)source {
     [self.sources addObject:source];
-    [self updatePageSize];
+    [self updateImageSources];
 }
 
 -(void) addImageSourcesFromArray:(NSArray *)sources {
     [self.sources addObjectsFromArray:sources];
-    [self updatePageSize];
+    [self updateImageSources];
 }
 
 -(void) removeImageSource:(id<OnlineImageSource>)source {
     [self.sources removeObject:source];
-    [self updatePageSize];
+    [self updateImageSources];
 }
 
 -(void) removeAllImageSources {
     [self.sources removeAllObjects];
 }
 
--(void) setPageSize:(NSUInteger)pageSize {
-    _pageSize = pageSize;
-    [self updatePageSize];
+-(NSArray *) accounts {
+    return self.accounts;
 }
 
--(void) updatePageSize {
+-(void) setPageSize:(NSUInteger)pageSize {
+    _pageSize = pageSize;
+    [self updateImageSources];
+}
+
+-(void) updateImageSources {
     NSUInteger availableCount = 0;
-    for (id<OnlineImageSource> source in self.sources)
+    [_accounts removeAllObjects];
+    for (id<OnlineImageSource> source in self.sources) {
         if ([source isAvailable])
             availableCount++;
-    NSUInteger pageSize = round(((double) self.pageSize) / availableCount);
-    for (id<OnlineImageSource> source in self.sources)
-        source.pageSize = pageSize;
+        id<OnlineImageAccount> account = [source account];
+        if (account) {
+            BOOL found = NO;
+            for (id<OnlineImageAccount> existing in self.accounts)
+                if ([[account class] isSubclassOfClass:[existing class]] || [[existing class] isSubclassOfClass:[account class]]) {
+                    found = YES;
+                    break;
+                }
+            if (!found)
+                [_accounts addObject:account];
+        }
+    }
+    if (availableCount) {
+        NSUInteger pageSize = round(((double) self.pageSize) / availableCount);
+        for (id<OnlineImageSource> source in self.sources)
+            source.pageSize = pageSize;
+    }
 }
 
 -(void) loadImagesWithSuccess:(OnlineImageResultsBlock)onSuccess orFailure:(OnlineImageFailureBlock)onFailure {

@@ -67,6 +67,7 @@
 		A90B99FFF7DB01204A5829CE /* OnlineImagePicker.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = OnlineImagePicker.podspec; path = ../OnlineImagePicker.podspec; sourceTree = "<group>"; };
 		BD34988A19DA1C7E0051F41C /* InstagramAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramAccount.h; sourceTree = "<group>"; };
 		BD34988B19DA1C7E0051F41C /* InstagramAccount.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramAccount.m; sourceTree = "<group>"; };
+		BD34988E19DB56E60051F41C /* OnlineImageAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageAccount.h; path = ../OnlineImagePicker/OnlineImageAccount.h; sourceTree = "<group>"; };
 		BD67B84F19D70849005C8FD2 /* OnlineImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageInfo.h; path = ../OnlineImagePicker/OnlineImageInfo.h; sourceTree = "<group>"; };
 		BD67B85019D70849005C8FD2 /* OnlineImageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageManager.h; path = ../OnlineImagePicker/OnlineImageManager.h; sourceTree = "<group>"; };
 		BD67B85119D70849005C8FD2 /* OnlineImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImagePicker.h; path = ../OnlineImagePicker/OnlineImagePicker.h; sourceTree = "<group>"; };
@@ -246,6 +247,7 @@
 			children = (
 				BD67B85D19D7088C005C8FD2 /* OnlineImageAccountsController.h */,
 				BD67B85F19D7088C005C8FD2 /* OnlineImageAccountsController.m */,
+				BD34988E19DB56E60051F41C /* OnlineImageAccount.h */,
 			);
 			name = Accounts;
 			sourceTree = "<group>";

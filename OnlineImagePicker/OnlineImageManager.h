@@ -41,7 +41,7 @@ typedef void (^OnlineImageFailureBlock)(NSError* error, id<OnlineImageSource> so
 /**
  * An array of objects that implement the OnlineImageSource protocol, which will be queried for images. Inactive sources will be ignored.
  */
--(NSArray *)imageSources;
+-(NSArray *) imageSources;
 
 /**
  * Add an object that implements the OnlineImageSource protocol, which will be queried for images if active.
@@ -62,6 +62,11 @@ typedef void (^OnlineImageFailureBlock)(NSError* error, id<OnlineImageSource> so
  * Remove all objects from imageSources.
  */
 -(void) removeAllImageSources;
+
+/**
+ * An array of accounts used by the image sources.
+ */
+-(NSArray *) accounts;
 
 /**
  * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImagesWithSuccess:orFailure:.

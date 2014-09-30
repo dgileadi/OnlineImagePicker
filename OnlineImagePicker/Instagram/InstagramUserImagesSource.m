@@ -9,6 +9,7 @@
 #import "InstagramUserImagesSource.h"
 #import <InstagramKit/InstagramKit.h>
 #import "InstagramImageInfo.h"
+#import "InstagramAccount.h"
 
 @interface InstagramUserImagesSource()
 @property(nonatomic) InstagramPaginationInfo *currentPaginationInfo;
@@ -21,6 +22,10 @@
 /** This image source is only available if a user has been authenticated to Instagram. */
 -(BOOL) isAvailable {
     return [InstagramEngine sharedEngine].accessToken != nil;
+}
+
+-(id<OnlineImageAccount>) account {
+    return [InstagramAccount sharedInstance];
 }
 
 -(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
