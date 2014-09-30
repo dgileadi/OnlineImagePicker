@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'OnlineImagePicker/**/*.{h,m}'
-  s.ios.resource_bundle = { 'OnlineImagePicker' => ['OnlineImagePicker/Localization/*.lproj'] }
+  s.resource_bundles = { 'OnlineImagePicker' => ['OnlineImagePicker/Localization/*.lproj', 'OnlineImagePicker/Assets/*.png'] }
 
   s.public_header_files = 'OnlineImagePicker/**/*.h'
 
