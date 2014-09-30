@@ -82,12 +82,14 @@ First [register a new application with Instagram](http://instagram.com/developer
 
 You'll also need to set up your app to handle this prefix. You do this by first adding or editing the `URL types` key in your app's Info.plist. Under it add or edit the `URL Schemes` key. Within the `URL Schemes` array add an item for whatever value you used for `appname`.
 
-Also add the following two values to your app's Info.plist (or to InstagramKit.plist):
+Also add the following values to your app's Info.plist (or to InstagramKit.plist):
 
-Key							| Value
---------------------------- | ------
-InstagramKitAppClientId		| [The Client ID that Instagram gave you]
-InstagramKitAppRedirectURL	| [The Redirect URI you gave Instagram, like `appname://instagram_oauth_redirect`]
+Key								| Value
+------------------------------- | ------
+InstagramKitAppClientId			| [The Client ID that Instagram gave you]
+InstagramKitAppRedirectURL		| [The Redirect URI you gave Instagram, like `appname://instagram_oauth_redirect`]
+InstagramKitBaseUrl				| `https://api.instagram.com/v1/`
+InstagramKitAuthorizationUrl	| `https://api.instagram.com/oauth/authorize/`
 
 And finally make your AppDelegate forward to InstagramEngine, something like:
 

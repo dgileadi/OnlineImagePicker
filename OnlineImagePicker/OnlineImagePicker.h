@@ -12,7 +12,6 @@
 #import "OnlineImageInfo.h"
 #import "OnlineImageAccount.h"
 #import "OnlineImageAccountsController.h"
-#import "OnlineImageAccountsManager.h"
 
 #import "InstagramUserImagesSource.h"
 #import "InstagramPopularImagesSource.h"

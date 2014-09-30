@@ -57,7 +57,7 @@
 }
 
 -(NSArray *) accounts {
-    return self.accounts;
+    return _accounts;
 }
 
 -(void) setPageSize:(NSUInteger)pageSize {

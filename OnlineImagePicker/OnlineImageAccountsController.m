@@ -53,7 +53,7 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc ] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(doneManagingAccounts)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneManagingAccounts)];
     self.navigationItem.rightBarButtonItem = doneButton;
 }
 

@@ -12,8 +12,6 @@
 
 @interface InstagramAccount : NSObject<OnlineImageAccount>
 
-@property (nonatomic, assign) IKLoginScope scope;
-
 +(InstagramAccount *) sharedInstance;
 
 @end
