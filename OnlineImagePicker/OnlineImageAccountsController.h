@@ -9,20 +9,36 @@
 #import <UIKit/UIKit.h>
 #import "OnlineImageAccount.h"
 
+
+/**
+ * A delegate for OnlineImageAccountsController.
+ */
+@protocol OnlineImageAccountsDelegate <NSObject>
+
+/**
+ * A list of accounts to manage.
+ */
+-(NSArray *) accounts;
+
+/**
+ * Called when the controller is done managing accounts, typically in order to close the controller.
+ */
+-(void) doneManagingAccounts;
+
+@end
+
+
 /**
  * A controller for listing online accounts, and allowing users to log in and out of them.
  */
 @interface OnlineImageAccountsController : UINavigationController
 
-/** The accounts this controller manages. */
-@property(nonatomic) NSArray *accounts;
-
 /** A toolbar for displaying the Done button. */
 @property(nonatomic) IBOutlet UIToolbar *toolbar;
 
 /**
- * Initialize this controller with the given accounts.
+ * Initialize this controller with a delegate.
  */
--(id) initWithAccounts:(NSArray *)accounts;
+-(id) initWithDelegate:(id<OnlineImageAccountsDelegate>)delegate;
 
 @end

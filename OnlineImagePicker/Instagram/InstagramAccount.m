@@ -17,6 +17,7 @@ static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramA
 @interface InstagramLoginController : UIViewController <UIWebViewDelegate>
 
 @property(nonatomic, weak) UIWebView *webView;
+@property(nonatomic, weak) UIActivityIndicatorView *spinner;
 @property(nonatomic, strong) OnlineAccountLoginComplete completedBlock;
 @property(nonatomic) InstagramAccount *account;
 
@@ -69,18 +70,17 @@ static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramA
 }
 
 -(void) logout {
-    // TODO: once InstagramKit releases a new version, use the logout method from InstagramEngine instead
+    [InstagramEngine sharedEngine].accessToken = nil;
+    [InstagramAccount setStoredAccessToken:nil];
     
-    //    Clear all cookies so the next time the user wishes to switch accounts, they can do so
+    // clear all cookies so the next time the user wishes to switch accounts, they can do so
     NSHTTPCookie *cookie;
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     for (cookie in [storage cookies]) {
-        [storage deleteCookie:cookie];
+        if ([cookie.domain containsString:@"instagram"])
+            [storage deleteCookie:cookie];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [InstagramEngine sharedEngine].accessToken = nil;
-    [InstagramAccount setStoredAccessToken:nil];
 }
 
 @end
@@ -110,6 +110,12 @@ static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramA
         self.webView = webView;
     }
     
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.spinner = spinner;
+    [spinner startAnimating];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+    self.navigationItem.rightBarButtonItem = item;
+    
     NSDictionary *configuration = [InstagramEngine sharedEngineConfiguration];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?client_id=%@&redirect_uri=%@&response_type=token", configuration[kInstagramKitAuthorizationUrlConfigurationKey], configuration[kInstagramKitAppClientIdConfigurationKey], configuration[kInstagramKitAppRedirectUrlConfigurationKey]]];
     
@@ -127,13 +133,12 @@ static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramA
         NSArray *components = [URLString componentsSeparatedByString:delimiter];
         if (components.count > 1) {
             NSString *accessToken = [components lastObject];
-NSLog(@"Instagram ACCESS TOKEN = %@", accessToken);
             [[InstagramEngine sharedEngine] setAccessToken:accessToken];
             [InstagramAccount setStoredAccessToken:accessToken];
             
             [self.navigationController popViewControllerAnimated:YES];
-            self.completedBlock(nil, self.account);
         }
+        self.completedBlock(nil, self.account);
         return NO;
     }
     return YES;
@@ -142,6 +147,14 @@ NSLog(@"Instagram ACCESS TOKEN = %@", accessToken);
 -(void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.navigationController popViewControllerAnimated:YES];
     self.completedBlock(error, self.account);
+}
+
+-(void) webViewDidStartLoad:(UIWebView *)webView {
+    self.spinner.hidden = NO;
+}
+
+-(void) webViewDidFinishLoad:(UIWebView *)webView {
+    self.spinner.hidden = YES;
 }
 
 @end

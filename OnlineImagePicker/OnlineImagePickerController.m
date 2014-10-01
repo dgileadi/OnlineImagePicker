@@ -8,7 +8,6 @@
 
 #import "OnlineImagePickerController.h"
 #import "OnlineImagePickerCell.h"
-#import "OnlineImageAccountsController.h"
 #import "PhotoLibraryImageSource.h"
 #import "InstagramUserImagesSource.h"
 #import "InstagramPopularImagesSource.h"
@@ -86,7 +85,6 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 -(void) addDefaultImageSources {
     [self addImageSource:[[PhotoLibraryImageSource alloc] init]];
     [self addImageSource:[[InstagramUserImagesSource alloc] init]];
-    [self addImageSource:[[InstagramPopularImagesSource alloc] init]];
     // TODO: Facebook, Flickr, Dropbox user images
 }
 
@@ -180,12 +178,24 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 }
 
 -(void) showSelectAccounts {
-    OnlineImageAccountsController *accountsController = [[OnlineImageAccountsController alloc] initWithAccounts:self.imageManager.accounts];
+    OnlineImageAccountsController *accountsController = [[OnlineImageAccountsController alloc] initWithDelegate:self];
     [self presentViewController:accountsController animated:YES completion:nil];
 }
 
 -(void) cancelPicker {
     [self.pickerDelegate cancelledPicker];
+}
+
+#pragma mark - OnlineImageAccountsDelegate
+
+-(NSArray *) accounts {
+    return self.imageManager.accounts;
+}
+
+-(void) doneManagingAccounts {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    // update the pageSize based on the now-available accounts
+    self.imageManager.pageSize = self.imageManager.pageSize;
 }
 
 #pragma mark - UICollectionView
