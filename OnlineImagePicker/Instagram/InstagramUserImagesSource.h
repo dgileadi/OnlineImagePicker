@@ -10,8 +10,11 @@
 #import "OnlineImageSource.h"
 
 /**
- * Provides user images from Instagram. Requires that a user be authenticated.
+ * Provides user images from Instagram. Requires that a user be authenticated unless `userId` is populated by hand.
  */
 @interface InstagramUserImagesSource : NSObject <OnlineImageSource>
+
+/** The username to get images for. If none is provided it defaults to the logged-in user. */
+@property(nonatomic) NSString *username;
 
 @end

@@ -97,6 +97,8 @@
 		BD67B87319D711B4005C8FD2 /* InstagramPopularImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramPopularImagesSource.m; sourceTree = "<group>"; };
 		BD67B87419D7252E005C8FD2 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE.txt; path = ../LICENSE.txt; sourceTree = "<group>"; };
 		BD67B87619D73600005C8FD2 /* Localization */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Localization; path = ../OnlineImagePicker/Localization; sourceTree = "<group>"; };
+		BDA46B0C19DC5C9100FC6FB1 /* InstagramUserFeedImageSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramUserFeedImageSource.h; sourceTree = "<group>"; };
+		BDA46B0D19DC5C9100FC6FB1 /* InstagramUserFeedImageSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramUserFeedImageSource.m; sourceTree = "<group>"; };
 		BE89399133026A00DB1C59C6 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -273,6 +275,8 @@
 			children = (
 				BD67B86619D708B7005C8FD2 /* InstagramUserImagesSource.h */,
 				BD67B86719D708B7005C8FD2 /* InstagramUserImagesSource.m */,
+				BDA46B0C19DC5C9100FC6FB1 /* InstagramUserFeedImageSource.h */,
+				BDA46B0D19DC5C9100FC6FB1 /* InstagramUserFeedImageSource.m */,
 				BD67B87219D711B4005C8FD2 /* InstagramPopularImagesSource.h */,
 				BD67B87319D711B4005C8FD2 /* InstagramPopularImagesSource.m */,
 				BD67B86419D708B7005C8FD2 /* InstagramImageInfo.h */,

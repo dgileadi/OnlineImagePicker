@@ -22,6 +22,10 @@
     return nil;
 }
 
+-(BOOL) hasMoreImages {
+    return NO;
+}
+
 -(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
     [[InstagramEngine sharedEngine] getPopularMediaWithSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];

@@ -1,27 +1,27 @@
 //
-//  InstagramUserImagesSource.m
+//  InstagramUserFeedImageSource.m
 //  OnlineImagePicker
 //
-//  Created by David Gileadi on 9/8/14.
+//  Created by David Gileadi on 10/1/14.
 //  Copyright (c) 2014 David Gileadi. All rights reserved.
 //
 
-#import "InstagramUserImagesSource.h"
+#import "InstagramUserFeedImageSource.h"
 #import <InstagramKit/InstagramKit.h>
 #import "InstagramImageInfo.h"
 #import "InstagramAccount.h"
 
-@interface InstagramUserImagesSource()
+@interface InstagramUserFeedImageSource()
 @property(nonatomic) InstagramPaginationInfo *pagination;
 @end
 
-@implementation InstagramUserImagesSource
+@implementation InstagramUserFeedImageSource
 
 @synthesize pageSize;
 
-/** This image source is only available if we have a username to load images for. */
+/** This image source is only available if a user has been authenticated to Instagram. */
 -(BOOL) isAvailable {
-    return self.username != nil || [InstagramEngine sharedEngine].accessToken != nil;
+    return [InstagramEngine sharedEngine].accessToken != nil;
 }
 
 -(id<OnlineImageAccount>) account {
@@ -34,20 +34,11 @@
 
 -(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
     self.pagination = nil;
-    if (!self.username) {
-        [[InstagramEngine sharedEngine] getSelfUserDetailsWithSuccess:^(InstagramUser *userDetail) {
-            self.username = userDetail.username;
-            [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
-        } failure:^(NSError *error) {
-            NSLog(@"Error loading details for Instagram self user: %@", error);
-        }];
-    } else {
-        [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
-    }
+    [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
 }
 
 -(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    [[InstagramEngine sharedEngine] getMediaForUser:self.username count:self.pageSize maxId:self.pagination.nextMaxId withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+    [[InstagramEngine sharedEngine] getSelfFeedWithCount:self.pageSize maxId:self.pagination.nextMaxId success:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
         self.pagination = paginationInfo;
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];
         for (InstagramMedia *item in media)

@@ -87,6 +87,17 @@
     return nil;
 }
 
+-(BOOL) hasMoreImages {
+    if (self.assetsLibrary)
+        return self.index != NSUIntegerMax;
+    else
+#if __IPHONE_8_0
+        return self.index < self.assets.count;
+#else
+    return YES;
+#endif
+}
+
 -(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
     self.index = 0;
     return [self nextImagesWithSuccess:onSuccess orFailure:onFailure];

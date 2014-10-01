@@ -37,6 +37,12 @@ typedef void (^OnlineImageSourceFailureBlock)(NSError* error);
 -(id<OnlineImageAccount>) account;
 
 /**
+ * Returns whether any more images are available. If `loadImagesWithSuccess:orFailure:` hasn't yet been called then this method is not required to return
+ * a sensible result.
+ */
+-(BOOL) hasMoreImages;
+
+/**
  * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImagesWithSuccess:orFailure:.
  *
  * @param onSuccess An OnlineImageSourceResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
