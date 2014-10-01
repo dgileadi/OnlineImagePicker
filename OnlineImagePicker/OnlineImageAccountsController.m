@@ -31,6 +31,8 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 
 @implementation OnlineImageAccountsController
 
+@synthesize toolbar;
+
 -(id) initWithDelegate:(id<OnlineImageAccountsDelegate>)delegate {
     OnlineImageAccountsTableController *tableController = [[OnlineImageAccountsTableController alloc] initWithDelegate:delegate];
     if (self = [super initWithRootViewController:tableController]) {

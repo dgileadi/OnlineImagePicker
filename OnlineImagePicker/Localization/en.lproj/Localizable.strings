@@ -7,4 +7,7 @@
 "AccountLogin" = "Sign In";
 "AccountLogout" = "Sign Out";
 
+"DropboxAccount" = "Dropbox";
+"FacebookAccount" = "Facebook";
+"FlickrAccount" = "Flickr";
 "InstagramAccount" = "Instagram";

@@ -59,10 +59,66 @@ For each source you don't include you can skip the setup section below. Probably
 
 So, here are guides for setting up the various online accounts:
 
+Setting up Dropbox
+------------------
+
+First [register your application with Dropbox](https://www.dropbox.com/developers/apps/create), choosing the "Dropbox API App" type. Make sure the settings you choose allow your app to find the photos you want to make available.
+
+You'll need to set up your app to handle redirects from Dropbox. You do this by first adding or editing the `URL types` key in your app's Info.plist. Under it add or edit the `URL Schemes` key. Within the `URL Schemes` array add an item named `db-APP_KEY`, replacing `APP_KEY` with the App Key that Dropbox gave you when you registered your app.
+
+You'll also need to make your AppDelegate handle redirects from Dropbox, something like:
+
+	#import <DropboxSDK/DropboxSDK.h>
+	..
+	-(BOOL) application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+	{
+		BOOL wasHandled = [[DBSession sharedSession] handleOpenURL:url];
+		if (!wasHandled) {
+			// maybe try other handlers
+		}
+		return wasHandled;
+	}
+
+Finally you'll need to make your Dropbox app key and secret available to OnlineImagePicker. An easy way to do that is to add the following values to your app's Info.plist:
+
+Key						| Value
+----------------------- | ------
+DropboxAppKey			| [The App Key that Dropbox gave you]
+DropboxAppSecret		| [The App Secret that Dropbox gave you]
+
+If you'd rather not store them in your Info.plist then you can instead put the following in your AppDelegate's `application:didFinishLaunchingWithOptions:` method:
+
+	DBSession *dbSession = [[DBSession alloc]
+	      initWithAppKey:@"INSERT_APP_KEY"
+	      appSecret:@"INSERT_APP_SECRET"
+	      root:kDBRootDropbox];
+	[DBSession setSharedSession:dbSession];
+
 Setting up Facebook
 -------------------
 
 Facebook has a [handy guide for getting started on iOS](https://developers.facebook.com/docs/ios/getting-started). Follow it, but skip step 2 (for installing the SDK) since it's handled by Cocoapods. For the same reason skip the part in step 4 that talks about adding the SDK to your Xcode project.
+
+This library requires the `user_photos` permission. This is not one of the basic permissions that Facebook automatically grants, so you'll need to request it when registering your app with Facebook and they'll need to review your app and approve the request.
+
+You'll also need to make your AppDelegate handle redirects from Facebook for login, something like:
+
+	#import <FacebookSDK/FacebookSDK.h>
+	..
+	-(BOOL) application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+	{
+		BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+		if (!wasHandled) {
+			// maybe try other handlers
+		}
+		return wasHandled;
+	}
+
+Also in your AppDelegate add the following code to your `applicationDidBecomeActive:` method:
+
+	[FBAppCall handleDidBecomeActive];
+
+This handles the situation where the app moved to the background in the middle of logging in.
 
 Setting up Instagram
 --------------------

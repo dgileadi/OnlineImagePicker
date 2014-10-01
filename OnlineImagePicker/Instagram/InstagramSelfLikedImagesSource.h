@@ -1,5 +1,5 @@
 //
-//  InstagramUserFeedImageSource.h
+//  InstagramSelfLikedImagesSource.h
 //  OnlineImagePicker
 //
 //  Created by David Gileadi on 10/1/14.
@@ -10,8 +10,8 @@
 #import "OnlineImageSource.h"
 
 /**
- * Provides images from the Instagram user's feed. Requires that a user be authenticated.
+ * Provides images that the logged-in Instagram user liked. Requires that a user be authenticated.
  */
-@interface InstagramUserFeedImageSource : NSObject <OnlineImageSource>
+@interface InstagramSelfLikedImagesSource : NSObject <OnlineImageSource>
 
 @end

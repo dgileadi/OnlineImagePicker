@@ -13,7 +13,14 @@
 #import "OnlineImageAccount.h"
 #import "OnlineImageAccountsController.h"
 
+#import "FacebookMyUploadedImagesSource.h"
+#import "FacebookImagesOfMeSource.h"
+
 #import "InstagramUserImagesSource.h"
+#import "InstagramUserFeedImageSource.h"
 #import "InstagramPopularImagesSource.h"
+#import "InstagramLocationImagesSource.h"
+#import "InstagramSelfLikedImagesSource.h"
+#import "InstagramTaggedImagesSource.h"
 
 #import "PhotoLibraryImageSource.h"

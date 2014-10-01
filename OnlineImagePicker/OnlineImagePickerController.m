@@ -10,7 +10,8 @@
 #import "OnlineImagePickerCell.h"
 #import "PhotoLibraryImageSource.h"
 #import "InstagramUserImagesSource.h"
-#import "InstagramPopularImagesSource.h"
+#import "FacebookMyUploadedImagesSource.h"
+#import "FacebookImagesOfMeSource.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 
@@ -84,8 +85,10 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 
 -(void) addDefaultImageSources {
     [self addImageSource:[[PhotoLibraryImageSource alloc] init]];
+    [self addImageSource:[[FacebookMyUploadedImagesSource alloc] init]];
+    [self addImageSource:[[FacebookImagesOfMeSource alloc] init]];
     [self addImageSource:[[InstagramUserImagesSource alloc] init]];
-    // TODO: Facebook, Flickr, Dropbox user images
+    // TODO: Flickr, Dropbox user images
 }
 
 -(NSArray *)imageSources {

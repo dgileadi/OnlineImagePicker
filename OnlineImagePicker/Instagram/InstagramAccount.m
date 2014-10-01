@@ -9,19 +9,13 @@
 #import "InstagramAccount.h"
 #import <UIKit/UIKit.h>
 #import <InstagramKit/InstagramEngine.h>
+#import "OnlineImageLoginController.h"
 
 
 static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramAccessToken";
 
 
-@interface InstagramLoginController : UIViewController <UIWebViewDelegate>
-
-@property(nonatomic, weak) UIWebView *webView;
-@property(nonatomic, weak) UIActivityIndicatorView *spinner;
-@property(nonatomic, strong) OnlineAccountLoginComplete completedBlock;
-@property(nonatomic) InstagramAccount *account;
-
--(id) initWithAccount:(InstagramAccount *)account completed:(OnlineAccountLoginComplete)completedBlock;
+@interface InstagramLoginController : OnlineImageLoginController
 
 @end
 
@@ -88,46 +82,13 @@ static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramA
 
 @implementation InstagramLoginController
 
--(id) initWithAccount:(InstagramAccount *)account completed:(OnlineAccountLoginComplete)completedBlock {
-    if (self = [super init]) {
-        self.account = account;
-        self.completedBlock = completedBlock;
-    }
-    return self;
-}
-
--(void) viewDidLoad {
-    [super viewDidLoad];
-    
-    if (!self.webView) {
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-        webView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        webView.scrollView.bounces = NO;
-        webView.contentMode = UIViewContentModeScaleAspectFit;
-        webView.delegate = self;
-        
-        [self.view addSubview:webView];
-        self.webView = webView;
-    }
-    
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    self.spinner = spinner;
-    [spinner startAnimating];
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:spinner];
-    self.navigationItem.rightBarButtonItem = item;
-    
+-(NSURL *) loginURL {
     NSDictionary *configuration = [InstagramEngine sharedEngineConfiguration];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?client_id=%@&redirect_uri=%@&response_type=token", configuration[kInstagramKitAuthorizationUrlConfigurationKey], configuration[kInstagramKitAppClientIdConfigurationKey], configuration[kInstagramKitAppRedirectUrlConfigurationKey]]];
-    
-    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@?client_id=%@&redirect_uri=%@&response_type=token", configuration[kInstagramKitAuthorizationUrlConfigurationKey], configuration[kInstagramKitAppClientIdConfigurationKey], configuration[kInstagramKitAppRedirectUrlConfigurationKey]]];
 }
 
--(void) viewWillDisappear:(BOOL)animated {
-    [[InstagramEngine sharedEngine] cancelLogin];
-}
-
--(BOOL) webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    NSString *URLString = [request.URL absoluteString];
+-(BOOL) handleRedirect:(NSURL *)url {
+    NSString *URLString = [url absoluteString];
     if ([URLString hasPrefix:[[InstagramEngine sharedEngine] appRedirectURL]]) {
         NSString *delimiter = @"access_token=";
         NSArray *components = [URLString componentsSeparatedByString:delimiter];
@@ -135,26 +96,14 @@ static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramA
             NSString *accessToken = [components lastObject];
             [[InstagramEngine sharedEngine] setAccessToken:accessToken];
             [InstagramAccount setStoredAccessToken:accessToken];
-            
-            [self.navigationController popViewControllerAnimated:YES];
         }
-        self.completedBlock(nil, self.account);
-        return NO;
+        return YES;
     }
-    return YES;
+    return NO;
 }
 
--(void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    [self.navigationController popViewControllerAnimated:YES];
-    self.completedBlock(error, self.account);
-}
-
--(void) webViewDidStartLoad:(UIWebView *)webView {
-    self.spinner.hidden = NO;
-}
-
--(void) webViewDidFinishLoad:(UIWebView *)webView {
-    self.spinner.hidden = YES;
+-(void) viewWillDisappear:(BOOL)animated {
+    [[InstagramEngine sharedEngine] cancelLogin];
 }
 
 @end

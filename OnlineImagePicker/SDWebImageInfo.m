@@ -32,8 +32,6 @@
 @end
 
 
-
-
 @implementation SDWebImageInfo
 
 -(id<OnlineImageLoad>) loadThumbnailForTargetSize:(CGSize)size

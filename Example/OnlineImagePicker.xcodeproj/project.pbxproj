@@ -99,6 +99,30 @@
 		BD67B87619D73600005C8FD2 /* Localization */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Localization; path = ../OnlineImagePicker/Localization; sourceTree = "<group>"; };
 		BDA46B0C19DC5C9100FC6FB1 /* InstagramUserFeedImageSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramUserFeedImageSource.h; sourceTree = "<group>"; };
 		BDA46B0D19DC5C9100FC6FB1 /* InstagramUserFeedImageSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramUserFeedImageSource.m; sourceTree = "<group>"; };
+		BDA46B0E19DC663400FC6FB1 /* InstagramLocationImagesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramLocationImagesSource.h; sourceTree = "<group>"; };
+		BDA46B0F19DC663400FC6FB1 /* InstagramLocationImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramLocationImagesSource.m; sourceTree = "<group>"; };
+		BDA46B1019DC664A00FC6FB1 /* InstagramSelfLikedImagesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramSelfLikedImagesSource.h; sourceTree = "<group>"; };
+		BDA46B1119DC664A00FC6FB1 /* InstagramSelfLikedImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramSelfLikedImagesSource.m; sourceTree = "<group>"; };
+		BDA46B1219DC667400FC6FB1 /* InstagramTaggedImagesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramTaggedImagesSource.h; sourceTree = "<group>"; };
+		BDA46B1319DC667400FC6FB1 /* InstagramTaggedImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramTaggedImagesSource.m; sourceTree = "<group>"; };
+		BDA46B1419DC6EEB00FC6FB1 /* FacebookMyUploadedImagesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacebookMyUploadedImagesSource.h; sourceTree = "<group>"; };
+		BDA46B1519DC6EEB00FC6FB1 /* FacebookMyUploadedImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacebookMyUploadedImagesSource.m; sourceTree = "<group>"; };
+		BDA46B1619DC702F00FC6FB1 /* FacebookImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacebookImageInfo.h; sourceTree = "<group>"; };
+		BDA46B1719DC702F00FC6FB1 /* FacebookImageInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacebookImageInfo.m; sourceTree = "<group>"; };
+		BDA46B1819DC704300FC6FB1 /* FacebookAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacebookAccount.h; sourceTree = "<group>"; };
+		BDA46B1919DC704300FC6FB1 /* FacebookAccount.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacebookAccount.m; sourceTree = "<group>"; };
+		BDA46B1A19DC713100FC6FB1 /* OnlineImageLoginController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageLoginController.h; path = ../OnlineImagePicker/OnlineImageLoginController.h; sourceTree = "<group>"; };
+		BDA46B1B19DC713100FC6FB1 /* OnlineImageLoginController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OnlineImageLoginController.m; path = ../OnlineImagePicker/OnlineImageLoginController.m; sourceTree = "<group>"; };
+		BDA46B1C19DC946300FC6FB1 /* FacebookImagesOfMeSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacebookImagesOfMeSource.h; sourceTree = "<group>"; };
+		BDA46B1D19DC946300FC6FB1 /* FacebookImagesOfMeSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacebookImagesOfMeSource.m; sourceTree = "<group>"; };
+		BDA46B1E19DC98C100FC6FB1 /* FacebookImageSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacebookImageSource.h; sourceTree = "<group>"; };
+		BDA46B1F19DC98C100FC6FB1 /* FacebookImageSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacebookImageSource.m; sourceTree = "<group>"; };
+		BDA46B2019DCAB4200FC6FB1 /* DropboxImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DropboxImageInfo.h; sourceTree = "<group>"; };
+		BDA46B2119DCAB4200FC6FB1 /* DropboxImageInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DropboxImageInfo.m; sourceTree = "<group>"; };
+		BDA46B2219DCAB4F00FC6FB1 /* DropboxAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DropboxAccount.h; sourceTree = "<group>"; };
+		BDA46B2319DCAB4F00FC6FB1 /* DropboxAccount.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DropboxAccount.m; sourceTree = "<group>"; };
+		BDA46B2419DCAB6600FC6FB1 /* DropboxImagesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DropboxImagesSource.h; sourceTree = "<group>"; };
+		BDA46B2519DCAB6600FC6FB1 /* DropboxImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DropboxImagesSource.m; sourceTree = "<group>"; };
 		BE89399133026A00DB1C59C6 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -240,6 +264,8 @@
 				BD67B85919D70849005C8FD2 /* OnlineImagePickerCell.m */,
 				BD67B85519D70849005C8FD2 /* SDWebImageInfo.h */,
 				BD67B85B19D70849005C8FD2 /* SDWebImageInfo.m */,
+				BDA46B1A19DC713100FC6FB1 /* OnlineImageLoginController.h */,
+				BDA46B1B19DC713100FC6FB1 /* OnlineImageLoginController.m */,
 			);
 			name = OnlineImagePicker;
 			sourceTree = "<group>";
@@ -257,6 +283,16 @@
 		BD67B86119D7089C005C8FD2 /* Facebook */ = {
 			isa = PBXGroup;
 			children = (
+				BDA46B1419DC6EEB00FC6FB1 /* FacebookMyUploadedImagesSource.h */,
+				BDA46B1519DC6EEB00FC6FB1 /* FacebookMyUploadedImagesSource.m */,
+				BDA46B1C19DC946300FC6FB1 /* FacebookImagesOfMeSource.h */,
+				BDA46B1D19DC946300FC6FB1 /* FacebookImagesOfMeSource.m */,
+				BDA46B1E19DC98C100FC6FB1 /* FacebookImageSource.h */,
+				BDA46B1F19DC98C100FC6FB1 /* FacebookImageSource.m */,
+				BDA46B1619DC702F00FC6FB1 /* FacebookImageInfo.h */,
+				BDA46B1719DC702F00FC6FB1 /* FacebookImageInfo.m */,
+				BDA46B1819DC704300FC6FB1 /* FacebookAccount.h */,
+				BDA46B1919DC704300FC6FB1 /* FacebookAccount.m */,
 			);
 			name = Facebook;
 			path = ../OnlineImagePicker/Facebook;
@@ -279,6 +315,12 @@
 				BDA46B0D19DC5C9100FC6FB1 /* InstagramUserFeedImageSource.m */,
 				BD67B87219D711B4005C8FD2 /* InstagramPopularImagesSource.h */,
 				BD67B87319D711B4005C8FD2 /* InstagramPopularImagesSource.m */,
+				BDA46B0E19DC663400FC6FB1 /* InstagramLocationImagesSource.h */,
+				BDA46B0F19DC663400FC6FB1 /* InstagramLocationImagesSource.m */,
+				BDA46B1019DC664A00FC6FB1 /* InstagramSelfLikedImagesSource.h */,
+				BDA46B1119DC664A00FC6FB1 /* InstagramSelfLikedImagesSource.m */,
+				BDA46B1219DC667400FC6FB1 /* InstagramTaggedImagesSource.h */,
+				BDA46B1319DC667400FC6FB1 /* InstagramTaggedImagesSource.m */,
 				BD67B86419D708B7005C8FD2 /* InstagramImageInfo.h */,
 				BD67B86519D708B7005C8FD2 /* InstagramImageInfo.m */,
 				BD34988A19DA1C7E0051F41C /* InstagramAccount.h */,
@@ -307,6 +349,12 @@
 		BD67B87119D708D7005C8FD2 /* Dropbox */ = {
 			isa = PBXGroup;
 			children = (
+				BDA46B2419DCAB6600FC6FB1 /* DropboxImagesSource.h */,
+				BDA46B2519DCAB6600FC6FB1 /* DropboxImagesSource.m */,
+				BDA46B2019DCAB4200FC6FB1 /* DropboxImageInfo.h */,
+				BDA46B2119DCAB4200FC6FB1 /* DropboxImageInfo.m */,
+				BDA46B2219DCAB4F00FC6FB1 /* DropboxAccount.h */,
+				BDA46B2319DCAB4F00FC6FB1 /* DropboxAccount.m */,
 			);
 			name = Dropbox;
 			path = ../OnlineImagePicker/Dropbox;

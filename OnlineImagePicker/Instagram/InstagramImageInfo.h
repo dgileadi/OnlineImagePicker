@@ -12,7 +12,7 @@
 #import "SDWebImageInfo.h"
 
 /**
- * Provides information about an instagram image.
+ * Provides information about an Instagram image.
  */
 @interface InstagramImageInfo : SDWebImageInfo
 

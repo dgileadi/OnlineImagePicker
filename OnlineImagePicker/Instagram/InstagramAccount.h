@@ -10,8 +10,12 @@
 #import <InstagramKit/InstagramKit.h>
 #import "OnlineImageAccountsController.h"
 
+/**
+ * Supports user authentication for Instagram.
+ */
 @interface InstagramAccount : NSObject<OnlineImageAccount>
 
+/** The single shared instance of this class. */
 +(InstagramAccount *) sharedInstance;
 
 @end
