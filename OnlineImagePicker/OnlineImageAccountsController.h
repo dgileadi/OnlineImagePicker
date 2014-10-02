@@ -33,9 +33,6 @@
  */
 @interface OnlineImageAccountsController : UINavigationController
 
-/** A toolbar for displaying the Done button. */
-@property(nonatomic) IBOutlet UIToolbar *toolbar;
-
 /**
  * Initialize this controller with a delegate.
  */

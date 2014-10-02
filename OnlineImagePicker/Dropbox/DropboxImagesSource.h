@@ -7,9 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <DropboxSDK/DropboxSDK.h>
+#import <DropboxSDK.h>
 #import "OnlineImageSource.h"
 
+/**
+ * Provides images that the user uploaded to Dropbox. Requires that the user be authenticated.
+ */
 @interface DropboxImagesSource : NSObject <OnlineImageSource, DBRestClientDelegate>
+
+/** The path strings to search, in order. Defaults to "/Camera Uploads", "/Photos" and "/". */
+@property(nonatomic) NSArray *paths;
+
+/** Path to exclude. Defaults to "/Screenshots". */
+@property(nonatomic) NSSet *excludePaths;
 
 @end

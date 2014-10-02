@@ -7,13 +7,13 @@
 //
 
 #import "DropboxAccount.h"
-#import <DropboxSDK/DropboxSDK.h>
+#import <DropboxSDK.h>
 #import <UIKit/UIKit.h>
 #import "OnlineImageLoginController.h"
 
 
-static const NSString *kDropboxAppKeyName = @"DropboxAppKey";
-static const NSString *kDropboxAppSecretName = @"DropboxAppSecret";
+static NSString *kDropboxAppKeyName = @"DropboxAppKey";
+static NSString *kDropboxAppSecretName = @"DropboxAppSecret";
 
 
 @implementation DropboxAccount
@@ -61,7 +61,7 @@ static const NSString *kDropboxAppSecretName = @"DropboxAppSecret";
 }
 
 -(void) loginFromController:(UINavigationController *)navigationController thenCall:(OnlineAccountLoginComplete)completed {
-    [[DBSession sharedSession] linkFromController:self];
+    [[DBSession sharedSession] linkFromController:navigationController];
 }
 
 -(void) logout {

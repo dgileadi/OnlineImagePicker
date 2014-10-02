@@ -7,11 +7,21 @@
 //
 
 #import "DropboxImagesSource.h"
+#import "DropboxImageInfo.h"
+#import "DropboxAccount.h"
 
 
 @interface DropboxImagesSource()
 
 @property(nonatomic) DBRestClient *restClient;
+@property(nonatomic) NSUInteger pathsIndex;
+@property(nonatomic) NSMutableSet *crawled;
+@property(nonatomic) NSMutableArray *uncrawled;
+@property(nonatomic) NSUInteger uncrawledIndex;
+@property(nonatomic) NSMutableArray *photos;
+@property(nonatomic) NSUInteger index;
+@property(nonatomic, strong) OnlineImageSourceResultsBlock successBlock;
+@property(nonatomic, strong) OnlineImageSourceFailureBlock failureBlock;
 
 @end
 
@@ -20,13 +30,27 @@
 
 -(id) init {
     if (self = [super init]) {
-        self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
-        self.restClient.delegate = self;
+        self.paths = [NSArray arrayWithObjects:@"/Camera Uploads", @"Photos", @"/", nil];
+        self.pathsIndex = 0;
+        self.excludePaths = [NSSet setWithObject:@"/Screenshots"];
+        self.crawled = [NSMutableSet set];
+        self.uncrawled = [NSMutableArray array];
+        self.uncrawledIndex = 0;
+        self.photos = [NSMutableArray array];
+        self.index = 0;
     }
     return self;
 }
 
 @synthesize pageSize;
+
+-(DBRestClient *) restClient {
+    if (!_restClient && [DBSession sharedSession]) {
+        _restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
+        _restClient.delegate = self;
+    }
+    return _restClient;
+}
 
 /** This image source is only available if we the user has logged into Dropbox. */
 -(BOOL) isAvailable {
@@ -38,49 +62,79 @@
 }
 
 -(BOOL) hasMoreImages {
-    return self.pagination.nextMaxId != nil;
+    return self.index != NSUIntegerMax;
 }
 
 -(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    self.pagination = nil;
-    if (!self.username) {
-        [[InstagramEngine sharedEngine] getSelfUserDetailsWithSuccess:^(InstagramUser *userDetail) {
-            self.username = userDetail.username;
-            [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
-        } failure:^(NSError *error) {
-            NSLog(@"Error loading details for Instagram self user: %@", error);
-        }];
-    } else {
-        [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
-    }
+    self.index = 0;
+    [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
 }
 
 -(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    [[InstagramEngine sharedEngine] getMediaForUser:self.username count:self.pageSize maxId:self.pagination.nextMaxId withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
-        self.pagination = paginationInfo;
-        NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];
-        for (InstagramMedia *item in media)
-            if (!item.isVideo)
-                [results addObject:[[InstagramImageInfo alloc] initWithMedia:item]];
-        onSuccess(results);
-    } failure:^(NSError *error) {
-        onFailure(error);
-    }];
+    self.successBlock = onSuccess;
+    self.failureBlock = onFailure;
+    NSUInteger reported = 0;
+    if (self.index < self.photos.count)
+        reported = [self reportPhotos];
+    
+    if (reported < self.pageSize) {
+        if (self.uncrawledIndex < self.uncrawled.count) {
+            [self crawl:self.uncrawled[self.uncrawledIndex]];
+            self.uncrawledIndex++;
+        } else if (self.pathsIndex < self.paths.count) {
+            [self crawl:self.paths[self.pathsIndex]];
+            self.pathsIndex++;
+        } else {
+            self.index = NSUIntegerMax;
+        }
+    }
+}
+
+-(void) crawl:(NSString *)path {
+    [self.crawled addObject:path];
+    [self.restClient loadMetadata:path];
+}
+
+-(NSUInteger) reportPhotos {
+    NSUInteger reported = 0;
+    if (self.index < self.photos.count) {
+        reported = MIN(self.pageSize, self.photos.count - self.index);
+        NSMutableArray *results = [NSMutableArray arrayWithCapacity:reported];
+        for (NSUInteger i = 0; i < reported; i++) {
+            [results addObject:[[DropboxImageInfo alloc] initWithMetadata:self.photos[self.index]]];
+            self.index++;
+        }
+        self.successBlock(results);
+    }
+    return reported;
 }
 
 #pragma mark - DBRestClientDelegate
 
 - (void)restClient:(DBRestClient *)client loadedMetadata:(DBMetadata *)metadata {
     if (metadata.isDirectory) {
-        NSLog(@"Folder '%@' contains:", metadata.path);
+        NSMutableArray *photos = [NSMutableArray array];
         for (DBMetadata *file in metadata.contents) {
-            NSLog(@"	%@", file.filename);
+            if (file.thumbnailExists)
+                [photos addObject:file];
+            else if (file.isDirectory && ![self.crawled containsObject:file.path])
+                [self.uncrawled addObject:file.path];
+        }
+        
+        if (photos.count) {
+            [photos sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                DBMetadata *m1 = obj1;
+                DBMetadata *m2 = obj2;
+                return [m2.clientMtime compare:m1.clientMtime];
+            }];
+            [self.photos addObjectsFromArray:photos];
+            [self reportPhotos];
         }
     }
 }
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error {
-    NSLog(@"Error loading metadata: %@", error);
+    self.failureBlock(error);
 }
 
 @end

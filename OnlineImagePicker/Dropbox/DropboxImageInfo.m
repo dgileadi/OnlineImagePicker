@@ -12,10 +12,10 @@
 
 @interface DropboxImageLoad : NSObject <OnlineImageLoad, DBRestClientDelegate>
 
-@property(nonatomic, readonly, weak) DBRestClient *restClient;
+@property(nonatomic, readonly) DBRestClient *restClient;
 @property(nonatomic, readonly) NSString *path;
-@property(nonatomic, readonly, weak) OnlineImageInfoProgressBlock progressBlock;
-@property(nonatomic, readonly, weak) OnlineImageInfoCompletedBlock completedBlock;
+@property(nonatomic, readonly, strong) OnlineImageInfoProgressBlock progressBlock;
+@property(nonatomic, readonly, strong) OnlineImageInfoCompletedBlock completedBlock;
 
 -(id) initWithPath:(NSString *)path progress:(OnlineImageInfoProgressBlock)progressBlock completed:(OnlineImageInfoCompletedBlock)completedBlock;
 
@@ -35,7 +35,8 @@
 }
 
 -(void) startLoad {
-    NSString *destinationPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@", [[NSUUID UUID] UUIDString], self.dbMetadata.filename]];
+    NSString *extension = [self.path pathExtension];
+    NSString *destinationPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[NSUUID UUID] UUIDString], extension]];
     [self.restClient loadFile:self.path intoPath:destinationPath];
 }
 
@@ -99,7 +100,7 @@
 
 @implementation DropboxImageInfo
 
--(id) initWithMetadata:(DBMetadata *)metadata fromRestClient:(DBRestClient *)restClient {
+-(id) initWithMetadata:(DBMetadata *)metadata {
     if (self = [super init]) {
         self.dbMetadata = metadata;
     }
@@ -109,8 +110,8 @@
 -(id<OnlineImageLoad>) loadThumbnailForTargetSize:(CGSize)size
                                          progress:(OnlineImageInfoProgressBlock)progressBlock
                                         completed:(OnlineImageInfoCompletedBlock)completedBlock {
-    NSString *size = [self sizeStringFor:size];
-    return [[DropboxThumbnailLoad alloc] initWithPath:path size:size completed:completedBlock];
+    NSString *sizeString = [self sizeStringFor:size];
+    return [[DropboxThumbnailLoad alloc] initWithPath:self.dbMetadata.path size:sizeString completed:completedBlock];
 }
 
 -(NSString *) sizeStringFor:(CGSize)size {
@@ -128,7 +129,7 @@
 
 -(id<OnlineImageLoad>) loadFullSizeWithProgress:(OnlineImageInfoProgressBlock)progressBlock
                                       completed:(OnlineImageInfoCompletedBlock)completedBlock {
-    return [[DropboxImageLoad alloc] initWithPath:path progress:progressBlock completed:completedBlock];
+    return [[DropboxImageLoad alloc] initWithPath:self.dbMetadata.path progress:progressBlock completed:completedBlock];
 }
 
 -(id) metadata {

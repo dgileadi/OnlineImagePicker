@@ -10,6 +10,13 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import "OnlineImageInfo.h"
 
+
+typedef enum : NSUInteger {
+    OnlineImageFirstSize,
+    OnlineImageSecondSize,
+} OnlineImageSizeChoice;
+
+
 @interface SDWebImageInfo : NSObject<OnlineImageInfo>
 
 /** Subclasses must implement: return the URL for a thumbnail of the given target size. */
@@ -20,6 +27,9 @@
 
 /** Subclasses must implement: return options for downloading the image. */
 -(SDWebImageOptions) options;
+
+/** May be useful for subclasses: find the size that's closest to the desired size. */
+-(OnlineImageSizeChoice) closestSizeTo:(CGSize)desired first:(CGSize)first second:(CGSize)second;
 
 /** Load a thumbnail of the image that is close to the requested size, customized with the given SDWebImage parameters. */
 -(id<SDWebImageOperation>) loadThumbnailForTargetSize:(CGSize) size

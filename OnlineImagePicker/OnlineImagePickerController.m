@@ -9,6 +9,7 @@
 #import "OnlineImagePickerController.h"
 #import "OnlineImagePickerCell.h"
 #import "PhotoLibraryImageSource.h"
+#import "DropboxImagesSource.h"
 #import "InstagramUserImagesSource.h"
 #import "FacebookMyUploadedImagesSource.h"
 #import "FacebookImagesOfMeSource.h"
@@ -85,10 +86,11 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 
 -(void) addDefaultImageSources {
     [self addImageSource:[[PhotoLibraryImageSource alloc] init]];
+    [self addImageSource:[[DropboxImagesSource alloc] init]];
     [self addImageSource:[[FacebookMyUploadedImagesSource alloc] init]];
     [self addImageSource:[[FacebookImagesOfMeSource alloc] init]];
     [self addImageSource:[[InstagramUserImagesSource alloc] init]];
-    // TODO: Flickr, Dropbox user images
+    // TODO: Flickr user images
 }
 
 -(NSArray *)imageSources {
@@ -197,6 +199,10 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 
 -(void) doneManagingAccounts {
     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    UIBarButtonItem *accountsButton = [self.toolbar.items lastObject];
+    accountsButton.title = [self accountsButtonTitle];
+    
     // update the pageSize based on the now-available accounts
     self.imageManager.pageSize = self.imageManager.pageSize;
 }

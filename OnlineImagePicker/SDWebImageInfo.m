@@ -9,6 +9,14 @@
 #import "SDWebImageInfo.h"
 
 
+CGSize CGSizeDifference(CGSize first, CGSize second) {
+    return CGSizeMake(ABS(first.width - second.width), ABS(first.height - second.height));
+}
+CGFloat CGSizeArea(CGSize size) {
+    return ABS(size.width) + ABS(size.height);
+}
+
+
 @interface SDWebImageOperationLoad : NSObject<OnlineImageLoad>
 
 @property(nonatomic, readonly) id<SDWebImageOperation> operation;
@@ -33,6 +41,27 @@
 
 
 @implementation SDWebImageInfo
+
+-(OnlineImageSizeChoice) closestSizeTo:(CGSize)desired first:(CGSize)first second:(CGSize)second {
+    CGSize firstDifference = CGSizeDifference(first, desired);
+    CGSize secondDifference = CGSizeDifference(second, desired);
+    return CGSizeArea(firstDifference) < CGSizeArea(secondDifference) ? OnlineImageFirstSize : OnlineImageSecondSize;
+}
+
+-(NSURL *) bestURLForTargetSize:(CGSize)desired withSize:(CGSize)size andURL:(NSURL *)url currentSize:(CGSize *)currentSize currentURL:(NSURL *)currentURL {
+    if (!currentURL) {
+        *currentSize = size;
+        return url;
+    } else {
+        CGSize newDifference = CGSizeDifference(size, desired);
+        CGSize oldDifference = CGSizeDifference(*currentSize, desired);
+        if (CGSizeArea(newDifference) < CGSizeArea(oldDifference)) {
+            *currentSize = size;
+            return url;
+        } else
+            return currentURL;
+    }
+}
 
 -(id<OnlineImageLoad>) loadThumbnailForTargetSize:(CGSize)size
                                              progress:(OnlineImageInfoProgressBlock)progressBlock

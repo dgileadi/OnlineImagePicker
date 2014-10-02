@@ -13,6 +13,8 @@
 #import "OnlineImageAccount.h"
 #import "OnlineImageAccountsController.h"
 
+#import "DropboxImagesSource.h"
+
 #import "FacebookMyUploadedImagesSource.h"
 #import "FacebookImagesOfMeSource.h"
 

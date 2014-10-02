@@ -8,6 +8,7 @@
 
 #import "FacebookImageSource.h"
 #import "FacebookAccount.h"
+#import "FacebookImageInfo.h"
 #import "OnlineImageAccount.h"
 #import <FacebookSDK/FacebookSDK.h>
 
@@ -48,9 +49,9 @@
 }
 
 -(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberForUnsignedInteger:self.pageSize], @"limit", @"id,images,created_time,updated_time", @"fields", nil];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%lu", (unsigned long) self.pageSize], @"limit", @"id,images,created_time,updated_time", @"fields", nil];
     if (self.after)
-        parameters setObject:self.after forKey:@"after"];
+        parameters[@"after"] = self.after;
     [FBRequestConnection startWithGraphPath:[self graphURL] parameters:parameters HTTPMethod:@"GET" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (!error) {
             NSDictionary *paging = [result objectForKey:@"paging"];

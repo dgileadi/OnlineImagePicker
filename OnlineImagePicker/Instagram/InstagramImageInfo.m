@@ -9,13 +9,6 @@
 #import "InstagramImageInfo.h"
 #import <SDWebImage/SDWebImageManager.h>
 
-CGSize CGSizeDifference(CGSize first, CGSize second) {
-    return CGSizeMake(ABS(first.width - second.width), ABS(first.height - second.height));
-}
-CGFloat CGSizeArea(CGSize size) {
-    return ABS(size.width) + ABS(size.height);
-}
-
 @implementation InstagramImageInfo
 
 -(id) initWithMedia:(InstagramMedia *)media {
@@ -25,26 +18,15 @@ CGFloat CGSizeArea(CGSize size) {
 }
 
 -(NSURL *) thumbnailURLForTargetSize:(CGSize)size {
-    CGSize currentSize;
-    NSURL *thumbnail = [self bestURLForTargetSize:size withSize:self.instagramMedia.thumbnailFrameSize andURL:self.instagramMedia.thumbnailURL currentSize:&currentSize currentURL:nil];
-    thumbnail = [self bestURLForTargetSize:size withSize:self.instagramMedia.lowResolutionImageFrameSize andURL:self.instagramMedia.lowResolutionImageURL currentSize:&currentSize currentURL:thumbnail];
-    thumbnail = [self bestURLForTargetSize:size withSize:self.instagramMedia.standardResolutionImageFrameSize andURL:self.instagramMedia.standardResolutionImageURL currentSize:&currentSize currentURL:thumbnail];
-    return thumbnail;
-}
-
--(NSURL *) bestURLForTargetSize:(CGSize)desired withSize:(CGSize)size andURL:(NSURL *)url currentSize:(CGSize *)currentSize currentURL:(NSURL *)currentURL {
-    if (!currentURL) {
-        *currentSize = size;
-        return url;
-    } else {
-        CGSize newDifference = CGSizeDifference(size, desired);
-        CGSize oldDifference = CGSizeDifference(*currentSize, desired);
-        if (CGSizeArea(newDifference) < CGSizeArea(oldDifference)) {
-            *currentSize = size;
-            return url;
-        } else
-            return currentURL;
+    CGSize currentSize = self.instagramMedia.thumbnailFrameSize;
+    NSURL *thumbnail = self.instagramMedia.thumbnailURL;
+    if ([self closestSizeTo:size first:currentSize second:self.instagramMedia.lowResolutionImageFrameSize] == OnlineImageSecondSize) {
+        currentSize = self.instagramMedia.lowResolutionImageFrameSize;
+        thumbnail = self.instagramMedia.lowResolutionImageURL;
     }
+    if ([self closestSizeTo:size first:currentSize second:self.instagramMedia.standardResolutionImageFrameSize] == OnlineImageSecondSize)
+        thumbnail = self.instagramMedia.standardResolutionImageURL;
+    return thumbnail;
 }
 
 -(NSURL *) fullsizeURL {

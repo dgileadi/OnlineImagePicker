@@ -31,8 +31,6 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 
 @implementation OnlineImageAccountsController
 
-@synthesize toolbar;
-
 -(id) initWithDelegate:(id<OnlineImageAccountsDelegate>)delegate {
     OnlineImageAccountsTableController *tableController = [[OnlineImageAccountsTableController alloc] initWithDelegate:delegate];
     if (self = [super initWithRootViewController:tableController]) {
@@ -64,8 +62,15 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationItem.title = [[self bundle] localizedStringForKey:@"AccountsTitle" value:@"Online Accounts" table:nil];
+    
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneManagingAccounts)];
     self.navigationItem.rightBarButtonItem = doneButton;
+}
+
+// sometimes login doesn't notify us so reload when we appear
+-(void) viewDidAppear:(BOOL)animated {
+    [self.tableView reloadData];
 }
 
 -(void) doneManagingAccounts {
@@ -91,7 +96,7 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
     
     cell.textLabel.text = [account description];
     
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"OnlineImagePicker" ofType:@"bundle"]];
+    NSBundle *bundle = [self bundle];
     NSString *login = [bundle localizedStringForKey:@"AccountLogin" value:@"Sign In" table:nil];
     NSString *logout = [bundle localizedStringForKey:@"AccountLogout" value:@"Sign Out" table:nil];
     cell.detailTextLabel.text = [account isLoggedIn] ? logout : login;
@@ -104,6 +109,10 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
     cell.accessoryType = [account isLoggedIn] ? UITableViewCellAccessoryNone : UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
+}
+
+-(NSBundle *) bundle {
+    return [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"OnlineImagePicker" ofType:@"bundle"]];
 }
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -4,6 +4,7 @@
 */
 
 "AccountsBarButton" = "Accounts (%@/%@)";
+"AccountsTitle" = "Online Accounts";
 "AccountLogin" = "Sign In";
 "AccountLogout" = "Sign Out";
 

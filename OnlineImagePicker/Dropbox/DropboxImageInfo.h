@@ -8,7 +8,7 @@
 
 #import "OnlineImageInfo.h"
 #import <Foundation/Foundation.h>
-#import <DropboxSDK/DropboxSDK.h>
+#import <DropboxSDK.h>
 
 /**
  * Provides information about a Dropbox image.

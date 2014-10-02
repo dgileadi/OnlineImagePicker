@@ -8,7 +8,7 @@
 
 #import "FacebookAccount.h"
 #import <UIKit/UIKit.h>
-#import <FacebookKit/FacebookEngine.h>
+#import <FacebookSDK.h>
 
 @implementation FacebookAccount
 
@@ -37,18 +37,18 @@
 
 -(void) sessionStateChanged:(FBSession *)session state:(FBSessionState)state error:(NSError *)error {
     // forward to the AppDelegate if applicable
-    AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
-    if ([appDelegate respondsToSelector:@selector(sessionStateChanged:state:error)])
+    id appDelegate = [UIApplication sharedApplication].delegate;
+    if ([appDelegate respondsToSelector:@selector(sessionStateChanged:state:error:)])
         [appDelegate sessionStateChanged:session state:state error:error];
     else if (error && [FBErrorUtility shouldNotifyUserForError:error]) {
-        alertTitle = @"Something went wrong";
-        alertText = [FBErrorUtility userMessageForError:error];
+        NSString *alertTitle = @"Something went wrong";
+        NSString *alertText = [FBErrorUtility userMessageForError:error];
         [self showMessage:alertText withTitle:alertTitle];
     }
 }
 
 -(void) showMessage:(NSString *)message withTitle:(NSString *)title {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title, message:message, delegate:nil, cancelButtonTitle:@"OK", otherButtonTitles:nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     alertView.alertViewStyle = UIAlertViewStyleDefault;
     [alertView show];
 }
@@ -72,11 +72,10 @@
 -(void) loginFromController:(UINavigationController *)navigationController thenCall:(OnlineAccountLoginComplete)completed {
     if (FBSession.activeSession.state != FBSessionStateOpen
         && FBSession.activeSession.state != FBSessionStateOpenTokenExtended) {
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile", @"user_photos"]
-                                           allowLoginUI:YES
-                                      completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-             [self sessionStateChanged:session state:state error:error];
-         }];
+        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile", @"user_photos"] allowLoginUI:YES completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+            [self sessionStateChanged:session state:state error:error];
+            completed(error, self);
+        }];
     }
 }
 
