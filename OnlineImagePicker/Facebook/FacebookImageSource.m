@@ -16,6 +16,8 @@
 @interface FacebookImageSource()
 
 @property(nonatomic) NSString *after;
+@property(nonatomic) BOOL nextRequested;
+@property(nonatomic) NSDate *loadStarted;
 
 @end
 
@@ -34,7 +36,7 @@
 }
 
 -(BOOL) hasMoreImages {
-    return self.after != nil;
+    return !self.nextRequested || self.after != nil;
 }
 
 -(NSString *) graphURL {
@@ -43,16 +45,30 @@
                                  userInfo:nil];
 }
 
--(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    self.after = nil;
-    [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
+-(BOOL) isLoading {
+    return self.loadStarted != nil;
 }
 
--(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
+-(NSDate *) loadStartTime {
+    return self.loadStarted;
+}
+
+-(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    self.after = nil;
+    self.nextRequested = NO;
+    [self nextImages:resultsBlock];
+}
+
+-(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    self.loadStarted = [NSDate date];
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%lu", (unsigned long) self.pageSize], @"limit", @"id,images,created_time,updated_time", @"fields", nil];
-    if (self.after)
+    if (self.after) {
         parameters[@"after"] = self.after;
+        self.nextRequested = YES;
+    }
     [FBRequestConnection startWithGraphPath:[self graphURL] parameters:parameters HTTPMethod:@"GET" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        self.loadStarted = nil;
+        NSMutableArray *results = nil;
         if (!error) {
             NSDictionary *paging = [result objectForKey:@"paging"];
             self.after = [paging objectForKey:@"after"];
@@ -64,6 +80,8 @@
         } else {
             NSLog(@"An error occurred getting images from Facebook: %@", [error localizedDescription]);
         }
+        
+        resultsBlock(results, error);
     }];
 }
 

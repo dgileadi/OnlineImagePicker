@@ -22,18 +22,13 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 @interface OnlineImagePickerController()
 
 @property(nonatomic) NSMutableArray *imageInfo;
+@property(nonatomic) NSUInteger requested;
+@property(nonatomic) NSTimer *timer;
 
 @end
 
 
 @implementation OnlineImagePickerController
-
-/*
- SDWebImageDownloader *downloader = [SDWebImageManager sharedManager].imageDownloader;
- downloader.headersFilter = ^NSDictionary *(NSURL *url, NSDictionary *headers) {
- };
- */
-
 
 /**
  * Initialize the picker with a default set of image sources, including the photo library and user images from popular online services.
@@ -114,26 +109,59 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 }
 
 -(void) loadImages {
-    [self.imageManager loadImagesWithSuccess:^(NSArray *results, id<OnlineImageSource> source) {
+    OnlineImageResultsBlock resultsBlock = ^(NSArray *results, id<OnlineImageSource> source) {
         for (id<OnlineImageInfo> info in results)
             [self.imageInfo addObject:info];
-// TODO: maybe sort
         [self.collectionView reloadData];
-    } orFailure:^(NSError *error, id<OnlineImageSource> source) {
+    };
+    OnlineImageFailureBlock failureBlock = ^(NSError *error, id<OnlineImageSource> source) {
         
-// TODO: what?
+        // TODO: what?
         
         
         NSLog(@"Error from %@: %@", source, error);
-    }];
+        
+        [self.collectionView reloadData];
+    };
+    
+    if (!self.requested) {
+        self.requested += self.imageManager.pageSize;
+        [self.imageManager loadImagesWithSuccess:resultsBlock orFailure:failureBlock];
+    } else if ([self.imageManager hasMoreImages]) {
+        self.requested += self.imageManager.pageSize;
+        [self.imageManager nextImagesWithSuccess:resultsBlock orFailure:failureBlock];
+    }
 }
 
--(void) updateCellLayout {
-    CGFloat width = self.view.bounds.size.width;
-    NSUInteger count = width / self.preferredContentSize.width;
+-(void) createTimer {
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(loadAndReapImages) userInfo:nil repeats:YES];
+}
+
+-(void) loadAndReapImages {
+    // TODO: check whether we need to reap timed-out images, do so
+    
+}
+
+
+/*
+ How to handle timeouts and loading more images:
+ 1. We can't ask a source to load more images when it is already loading them—it would load duplicates.
+ 2. Once a source delivers, we may want to query it again...
+    - if the user has scrolled and we need images immediately
+    - otherwise wait for the rest?
+ 3. If all sources have finished, preload a page or two of results
+    - Latency is probably worse than bandwidth (?), so perhaps load a couple pages at a time
+ 4. If a source doesn't load after a long time, assume it won't and add it to the available list
+ */
+
+
+
+-(void) updateCellLayoutToSize:(CGSize)size {
+    CGFloat width = size.width;
+    NSUInteger count = MAX(1, width / self.preferredContentSize.width);
     CGFloat margins = self.cellMargins.width * (count - 1);
-    CGFloat cellWidth = (width - margins) / count;
-    CGFloat cellHeight = self.preferredContentSize.height;
+    NSUInteger cellWidth = (width - margins) / count;
+    NSUInteger cellHeight = self.preferredContentSize.height;
     if (ABS(self.preferredContentSize.width - self.preferredContentSize.height) < 0.1)
         cellHeight = cellWidth;
     
@@ -202,9 +230,6 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     
     UIBarButtonItem *accountsButton = [self.toolbar.items lastObject];
     accountsButton.title = [self accountsButtonTitle];
-    
-    // update the pageSize based on the now-available accounts
-    self.imageManager.pageSize = self.imageManager.pageSize;
 }
 
 #pragma mark - UICollectionView
@@ -212,9 +237,11 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 -(void) viewDidLoad {
     [super viewDidLoad];
     [self.collectionView registerClass:[OnlineImagePickerCell class] forCellWithReuseIdentifier:kCellIdentifier];
-    [self updateCellLayout];
+    [self updateCellLayoutToSize:self.view.bounds.size];
     if (!self.toolbar)
         [self createToolbar];
+    if (!self.timer)
+        [self createTimer];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     [self loadImages];
 }
@@ -226,18 +253,18 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 
 #if __IPHONE_8_0
 -(void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    [self updateCellLayout];
+    [self updateCellLayoutToSize:size];
 }
 #else
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration {
-    [self updateCellLayout];
+    [self updateCellLayoutToSize:self.view.bounds.size];
 }
 #endif
 
 #pragma mark - UICollectionViewDataSource
 
 -(NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.imageInfo.count;
+    return MAX(self.requested, self.imageSources.count);
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -245,13 +272,18 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 -(UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     OnlineImagePickerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
     
-    id<OnlineImageInfo> imageInfo = [self.imageInfo objectAtIndex:indexPath.item];
-    cell.imageInfo = imageInfo;
-    
-    CGFloat scale = self.highResThumbnails ? self.view.window.screen.scale : 1;
-    [cell loadImageAtScale:scale];
-    
-// TODO: maybe some kind of placeholder, support for progress, support for half-resolution image first...
+    if (indexPath.item < self.imageInfo.count) {
+        id<OnlineImageInfo> imageInfo = [self.imageInfo objectAtIndex:indexPath.item];
+        cell.imageInfo = imageInfo;
+        
+        CGFloat scale = self.highResThumbnails ? self.view.window.screen.scale : 1;
+        [cell loadImageAtScale:scale];
+        
+// TODO: maybe some kind of placeholder
+    } else {
+        cell.imageInfo = nil;
+        [cell showIndeterminateProgress];
+    }
     
     return cell;
 }
@@ -262,6 +294,16 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
         OnlineImagePickerCell *cell = (OnlineImagePickerCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
         [self.pickerDelegate imagePickedWithInfo:cell.imageInfo andThumbnail:cell.imageView.image];
     }
+}
+
+#pragma mark - UIScrollViewDelegate
+
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat offsetY = scrollView.contentOffset.y;
+    CGFloat contentHeight = scrollView.contentSize.height;
+    // TODO: sooner?
+    if (offsetY > contentHeight - scrollView.frame.size.height)
+        [self loadImages];
 }
 
 #pragma mark - UIToolbarDelegate

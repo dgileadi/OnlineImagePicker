@@ -13,6 +13,7 @@
 
 @interface InstagramUserImagesSource()
 @property(nonatomic) InstagramPaginationInfo *pagination;
+@property(nonatomic) NSDate *loadStarted;
 @end
 
 @implementation InstagramUserImagesSource
@@ -29,33 +30,45 @@
 }
 
 -(BOOL) hasMoreImages {
-    return self.pagination.nextMaxId != nil;
+    return self.pagination == nil || self.pagination.nextMaxId != nil;
 }
 
--(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
+-(BOOL) isLoading {
+    return self.loadStarted != nil;
+}
+
+-(NSDate *) loadStartTime {
+    return self.loadStarted;
+}
+
+-(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
     self.pagination = nil;
     if (!self.username) {
+        self.loadStarted = [NSDate date];
         [[InstagramEngine sharedEngine] getSelfUserDetailsWithSuccess:^(InstagramUser *userDetail) {
             self.username = userDetail.username;
-            [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
+            [self nextImages:resultsBlock];
         } failure:^(NSError *error) {
             NSLog(@"Error loading details for Instagram self user: %@", error);
         }];
     } else {
-        [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
+        [self nextImages:resultsBlock];
     }
 }
 
--(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
+-(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    self.loadStarted = [NSDate date];
     [[InstagramEngine sharedEngine] getMediaForUser:self.username count:self.pageSize maxId:self.pagination.nextMaxId withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+        self.loadStarted = nil;
         self.pagination = paginationInfo;
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];
         for (InstagramMedia *item in media)
             if (!item.isVideo)
                 [results addObject:[[InstagramImageInfo alloc] initWithMedia:item]];
-        onSuccess(results);
+        resultsBlock(results, nil);
     } failure:^(NSError *error) {
-        onFailure(error);
+        self.loadStarted = nil;
+        resultsBlock(nil, error);
     }];
 }
 

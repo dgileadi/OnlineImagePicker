@@ -8,29 +8,45 @@
 
 #import "OnlineImagePickerCell.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <M13ProgressSuite/M13ProgressViewRing.h>
 
 @implementation OnlineImagePickerCell
 
 - (void)layoutSubviews {
-    CGFloat progressWidth = self.bounds.size.width / 2;
-    CGRect progressFrame = CGRectMake(progressWidth / 2, (self.bounds.size.height - progressWidth) / 2, progressWidth, progressWidth);
-    
-    if (!self.progressView) {
-        self.progressView = [[M13ProgressViewPie alloc] initWithFrame:progressFrame];
-        self.progressView.primaryColor = self.tintColor;
-        [self addSubview:self.progressView];
-    }
-    if (!self.imageView) {
-        self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.imageView.clipsToBounds = YES;
-        [self addSubview:self.imageView];
-    }
-    
     [super layoutSubviews];
     
-    self.progressView.frame = progressFrame;
+    self.progressView.frame = [self progressFrame];
     self.imageView.frame = self.bounds;
+}
+
+-(CGRect) progressFrame {
+    CGFloat progressWidth = self.bounds.size.width / 2;
+    return CGRectMake((self.bounds.size.width - progressWidth) / 2, (self.bounds.size.height - progressWidth) / 2, progressWidth, progressWidth);
+}
+
+-(M13ProgressView *) progressView {
+    if (!_progressView) {
+        [self setProgressView:[[M13ProgressViewRing alloc] initWithFrame:[self progressFrame]]];
+        _progressView.primaryColor = self.tintColor;
+        [self addSubview:_progressView];
+    }
+    return _progressView;
+}
+
+-(UIImageView *) imageView {
+    if (!_imageView) {
+        [self setImageView:[[UIImageView alloc] initWithFrame:self.bounds]];
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.clipsToBounds = YES;
+        [self addSubview:_imageView];
+    }
+    return _imageView;
+}
+
+-(void) showIndeterminateProgress {
+    self.progressView.hidden = NO;
+    self.imageView.hidden = YES;
+    self.progressView.indeterminate = YES;
 }
 
 -(void) setProgress:(CGFloat)progress {
@@ -42,6 +58,7 @@
 -(void) loadImageAtScale:(CGFloat) scale {
     [self.imageView sd_cancelCurrentImageLoad];
     [self setImage:nil];
+    _startedLoad = [NSDate date];
     
     CGSize size = self.bounds.size;
     if (scale > 1)
@@ -58,8 +75,11 @@
         if (!wself)
             return;
         dispatch_main_sync_safe(^{
+            _finishedLoad = [NSDate date];
             if (image)
                 [wself setImage:image];
+            else
+                self.progressView.hidden = YES;
             if (error) {
 // TODO: what?
                 

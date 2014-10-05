@@ -20,8 +20,8 @@
 @property(nonatomic) NSUInteger uncrawledIndex;
 @property(nonatomic) NSMutableArray *photos;
 @property(nonatomic) NSUInteger index;
-@property(nonatomic, strong) OnlineImageSourceResultsBlock successBlock;
-@property(nonatomic, strong) OnlineImageSourceFailureBlock failureBlock;
+@property(nonatomic, strong) OnlineImageSourceResultsBlock resultsBlock;
+@property(nonatomic) NSDate *loadStarted;
 
 @end
 
@@ -65,14 +65,22 @@
     return self.index != NSUIntegerMax;
 }
 
--(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    self.index = 0;
-    [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
+-(BOOL) isLoading {
+    return self.loadStarted != nil;
 }
 
--(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    self.successBlock = onSuccess;
-    self.failureBlock = onFailure;
+/** If isLoading returns YES, returns the time that the load started. */
+-(NSDate *) loadStartTime {
+    return self.loadStarted;
+}
+
+-(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    self.index = 0;
+    [self nextImages:resultsBlock];
+}
+
+-(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    self.resultsBlock = resultsBlock;
     NSUInteger reported = 0;
     if (self.index < self.photos.count)
         reported = [self reportPhotos];
@@ -91,11 +99,13 @@
 }
 
 -(void) crawl:(NSString *)path {
+    self.loadStarted = [NSDate date];
     [self.crawled addObject:path];
     [self.restClient loadMetadata:path];
 }
 
 -(NSUInteger) reportPhotos {
+    self.loadStarted = nil;
     NSUInteger reported = 0;
     if (self.index < self.photos.count) {
         reported = MIN(self.pageSize, self.photos.count - self.index);
@@ -104,7 +114,7 @@
             [results addObject:[[DropboxImageInfo alloc] initWithMetadata:self.photos[self.index]]];
             self.index++;
         }
-        self.successBlock(results);
+        self.resultsBlock(results, nil);
     }
     return reported;
 }
@@ -134,7 +144,8 @@
 }
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error {
-    self.failureBlock(error);
+    self.loadStarted = nil;
+    self.resultsBlock(nil, error);
 }
 
 @end

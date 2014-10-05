@@ -10,6 +10,12 @@
 #import <InstagramKit/InstagramKit.h>
 #import "InstagramImageInfo.h"
 
+
+@interface InstagramPopularImagesSource()
+@property(nonatomic) NSDate *loadStarted;
+@end
+
+
 @implementation InstagramPopularImagesSource
 
 @synthesize pageSize;
@@ -26,20 +32,30 @@
     return NO;
 }
 
--(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
+-(BOOL) isLoading {
+    return self.loadStarted != nil;
+}
+
+-(NSDate *) loadStartTime {
+    return self.loadStarted;
+}
+
+-(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    self.loadStarted = [NSDate date];
     [[InstagramEngine sharedEngine] getPopularMediaWithSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+        self.loadStarted = nil;
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];
         for (InstagramMedia *item in media)
             if (!item.isVideo)
                 [results addObject:[[InstagramImageInfo alloc] initWithMedia:item]];
-        onSuccess(results);
+        resultsBlock(results, nil);
     } failure:^(NSError *error) {
-        onFailure(error);
+        resultsBlock(nil, error);
     }];
 }
 
--(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    onSuccess(nil);
+-(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    resultsBlock(nil, nil);
 }
 
 @end

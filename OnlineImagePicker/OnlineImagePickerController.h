@@ -29,7 +29,7 @@
  * An implementation of UICollectionViewController that supports loading images from online sources like Facebook, Instagram and Flickr.
  * You must set `pickerDelegate` to get notified when images are picked.
  */
-@interface OnlineImagePickerController : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIToolbarDelegate, OnlineImageAccountsDelegate>
+@interface OnlineImagePickerController : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UIToolbarDelegate, OnlineImageAccountsDelegate>
 
 /**
  * A delegate for handling picked images. You must set the delegate to get notified of picked images.

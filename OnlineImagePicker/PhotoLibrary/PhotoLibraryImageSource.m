@@ -98,16 +98,24 @@
 #endif
 }
 
--(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
-    self.index = 0;
-    return [self nextImagesWithSuccess:onSuccess orFailure:onFailure];
+-(BOOL) isLoading {
+    return NO;
 }
 
--(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure {
+-(NSDate *) loadStartTime {
+    return nil;
+}
+
+-(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+    self.index = 0;
+    return [self nextImages:resultsBlock];
+}
+
+-(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
 #if __IPHONE_8_0
         if (self.index >= self.assets.count) {
-            onSuccess([NSArray array]);
+            resultsBlock(nil, nil);
             return;
         }
         
@@ -117,18 +125,18 @@
             [results addObject:[[PhotoLibraryImageInfo alloc] initWithAsset:asset]];
         }];
         
-        onSuccess(results);
+        resultsBlock(results, nil);
         
         self.index += self.pageSize;
 #endif
     } else {
         if (self.error) {
-            onFailure(self.error);
+            resultsBlock(nil, self.error);
             if (!self.assetsGroups.count)
                 return;
         }
         if (self.index == NSUIntegerMax) {
-            onSuccess([NSArray array]);
+            resultsBlock(nil, nil);
             return;
         }
         
@@ -143,12 +151,12 @@
             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.index, MIN(self.pageSize, group.numberOfAssets - self.index))];
             [group enumerateAssetsAtIndexes:indexSet options:0 usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 if (result)
-                    onSuccess([NSArray arrayWithObject:result]);
+                    resultsBlock([NSArray arrayWithObject:result], nil);
             }];
         }
         
         if (!requested) {
-            onSuccess([NSArray array]);
+            resultsBlock(nil, nil);
             self.index = NSUIntegerMax;
         } else
             self.index += self.groupPageSize;

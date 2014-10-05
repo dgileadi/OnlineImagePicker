@@ -11,15 +11,11 @@
 
 /**
  * Called when a page of results is returned from an image source.
- * The parameter is an array of OnlineImageInfo objects, up to pageSize in length.
+ *
+ * @param results An array of OnlineImageInfo objects, up to pageSize in length. If empty or `nil` and error is `nil` then no more results are available.
+ * @param error An error that occurred or `nil`.
  */
-typedef void(^OnlineImageSourceResultsBlock)(NSArray *results);
-
-/**
- * Called when an image source fails to return results due to some error.
- * The parameter is the error that was generated.
- */
-typedef void (^OnlineImageSourceFailureBlock)(NSError* error);
+typedef void(^OnlineImageSourceResultsBlock)(NSArray *results, NSError *error);
 
 
 /**
@@ -27,14 +23,14 @@ typedef void (^OnlineImageSourceFailureBlock)(NSError* error);
  */
 @protocol OnlineImageSource <NSObject>
 
+/** Returns the account required by this OnlineImageSource or `nil` if no user account is required. */
+-(id<OnlineImageAccount>) account;
+
 /** The number of results that should be returned with each call to loadImagesWithSuccess:orFailure or nextImagesWithSuccess:orFailure:. */
 @property(nonatomic) NSUInteger pageSize;
 
 /** Whether the image source is available. An image source that requires authentication may be unavailable if credentials haven't been provided, for example. */
 -(BOOL) isAvailable;
-
-/** Returns the account required by this OnlineImageSource or `nil` if no user account is required. */
--(id<OnlineImageAccount>) account;
 
 /**
  * Returns whether any more images are available. If `loadImagesWithSuccess:orFailure:` hasn't yet been called then this method is not required to return
@@ -42,20 +38,24 @@ typedef void (^OnlineImageSourceFailureBlock)(NSError* error);
  */
 -(BOOL) hasMoreImages;
 
+/** Returns YES if a request for images has started that hasn't been replied to yet. */
+-(BOOL) isLoading;
+
+/** If isLoading returns YES, returns the time that the load started. */
+-(NSDate *) loadStartTime;
+
 /**
- * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImagesWithSuccess:orFailure:.
+ * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImages:.
  *
- * @param onSuccess An OnlineImageSourceResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
- * @param onFailure An OnlineImageSourceFailureBlock that is called if the request fails, providing the error that occurred.
+ * @param resultsBlock An OnlineImageSourceResultsBlock that is called when the request completes, providing an array of OnlineImageInfo results and/or an error.
  */
--(void) loadImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure;
+-(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock;
 
 /**
  * Continue a previous request for images, providing the next page of results.
  *
- * @param onSuccess An OnlineImageSourceResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
- * @param onFailure An OnlineImageSourceFailureBlock that is called if the request fails, providing the error that occurred.
+ * @param resultsBlock An OnlineImageSourceResultsBlock that is called when the request completes, providing an array of OnlineImageInfo results and/or an error.
  */
--(void) nextImagesWithSuccess:(OnlineImageSourceResultsBlock)onSuccess orFailure:(OnlineImageSourceFailureBlock)onFailure;
+-(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock;
 
 @end
