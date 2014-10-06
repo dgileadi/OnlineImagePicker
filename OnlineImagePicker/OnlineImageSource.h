@@ -12,7 +12,7 @@
 /**
  * Called when a page of results is returned from an image source.
  *
- * @param results An array of OnlineImageInfo objects, up to pageSize in length. If empty or `nil` and error is `nil` then no more results are available.
+ * @param results An array of OnlineImageInfo objects, up to the requested count in length. If empty or `nil` and error is `nil` then no more results are available.
  * @param error An error that occurred or `nil`.
  */
 typedef void(^OnlineImageSourceResultsBlock)(NSArray *results, NSError *error);
@@ -25,9 +25,6 @@ typedef void(^OnlineImageSourceResultsBlock)(NSArray *results, NSError *error);
 
 /** Returns the account required by this OnlineImageSource or `nil` if no user account is required. */
 -(id<OnlineImageAccount>) account;
-
-/** The number of results that should be returned with each call to loadImagesWithSuccess:orFailure or nextImagesWithSuccess:orFailure:. */
-@property(nonatomic) NSUInteger pageSize;
 
 /** Whether the image source is available. An image source that requires authentication may be unavailable if credentials haven't been provided, for example. */
 -(BOOL) isAvailable;
@@ -49,13 +46,13 @@ typedef void(^OnlineImageSourceResultsBlock)(NSArray *results, NSError *error);
  *
  * @param resultsBlock An OnlineImageSourceResultsBlock that is called when the request completes, providing an array of OnlineImageInfo results and/or an error.
  */
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock;
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock;
 
 /**
  * Continue a previous request for images, providing the next page of results.
  *
  * @param resultsBlock An OnlineImageSourceResultsBlock that is called when the request completes, providing an array of OnlineImageInfo results and/or an error.
  */
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock;
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock;
 
 @end

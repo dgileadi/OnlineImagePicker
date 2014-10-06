@@ -24,14 +24,11 @@
 @property(nonatomic) ALAssetsLibrary *assetsLibrary;
 @property(nonatomic) NSMutableArray *assetsGroups;
 @property(nonatomic) NSError *error;
-@property(nonatomic) NSUInteger groupPageSize;
 
 @end
 
 
 @implementation PhotoLibraryImageSource
-
-@synthesize pageSize;
 
 -(id) init {
     if (self = [super init]) {
@@ -46,10 +43,8 @@
             self.assetsLibrary = [[ALAssetsLibrary alloc] init];
             self.assetsGroups = [NSMutableArray array];
             [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                if ([group numberOfAssets] > 0) {
+                if ([group numberOfAssets] > 0)
                     [self.assetsGroups addObject:group];
-                    [self updateGroupPageSize];
-                }
             } failureBlock:^(NSError *error) {
                 self.error = error;
             }];
@@ -58,18 +53,6 @@
         self.error = nil;
     }
     return self;
-}
-
--(void) setPageSize:(NSUInteger)size {
-    pageSize = size;
-    [self updateGroupPageSize];
-}
-
--(void) updateGroupPageSize {
-    if (self.assetsGroups.count)
-        self.groupPageSize = MAX(1, self.pageSize / self.assetsGroups.count);
-    else
-        self.groupPageSize = 1;
 }
 
 -(BOOL) isAvailable {
@@ -106,28 +89,29 @@
     return nil;
 }
 
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.index = 0;
-    return [self nextImages:resultsBlock];
+    return [self next:count images:resultsBlock];
 }
 
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
 #if __IPHONE_8_0
         if (self.index >= self.assets.count) {
             resultsBlock(nil, nil);
             return;
-        }
+        } else if (self.index + count > self.assets.count)
+            count = self.assets.count - self.index;
         
-        __block NSMutableArray *results = [NSMutableArray arrayWithCapacity:self.pageSize];
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.index, self.pageSize)];
+        __block NSMutableArray *results = [NSMutableArray arrayWithCapacity:count];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.index, count)];
         [self.assets enumerateObjectsAtIndexes:indexSet options:0 usingBlock:^(id asset, NSUInteger idx, BOOL *stop) {
             [results addObject:[[PhotoLibraryImageInfo alloc] initWithAsset:asset]];
         }];
         
         resultsBlock(results, nil);
         
-        self.index += self.pageSize;
+        self.index += count;
 #endif
     } else {
         if (self.error) {
@@ -140,6 +124,10 @@
             return;
         }
         
+        NSUInteger groupPageSize = count;
+        if (self.assetsGroups.count > 1)
+            groupPageSize = MAX(1, count / self.assetsGroups.count);
+        
         BOOL requested = NO;
         for (ALAssetsGroup *group in self.assetsGroups) {
             if (self.index >= group.numberOfAssets)
@@ -148,7 +136,7 @@
             requested = YES;
             ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
             [group setAssetsFilter:onlyPhotosFilter];
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.index, MIN(self.pageSize, group.numberOfAssets - self.index))];
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.index, MIN(groupPageSize, group.numberOfAssets - self.index))];
             [group enumerateAssetsAtIndexes:indexSet options:0 usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 if (result)
                     resultsBlock([NSArray arrayWithObject:result], nil);
@@ -159,7 +147,7 @@
             resultsBlock(nil, nil);
             self.index = NSUIntegerMax;
         } else
-            self.index += self.groupPageSize;
+            self.index += groupPageSize;
     }
 }
 

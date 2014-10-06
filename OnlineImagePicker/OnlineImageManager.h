@@ -25,6 +25,9 @@ typedef void (^OnlineImageFailureBlock)(NSError* error, id<OnlineImageSource> so
 /**
  * A step lower than OnlineImagePicker, this class loads image information from various sources and returns it.
  * Loading and displaying the images is left to classes that use this one.
+ *
+ * The implementation tries to load a page of images at a time, defined by `pageSize`. If one or more sources report errors then it requeries other
+ * sources. This means that fewer or more than a page of images may be loaded at a time.
  */
 @interface OnlineImageManager : NSObject
 
@@ -93,21 +96,21 @@ typedef void (^OnlineImageFailureBlock)(NSError* error, id<OnlineImageSource> so
 /**
  * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImagesWithSuccess:orFailure:.
  *
- * @param onSuccess An OnlineImageResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
+ * @param successBlock An OnlineImageResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
  * If there are multiple image sources then this block may be called multiple times, once for each source.
- * @param onFailure An OnlineImageFailureBlock that is called if the request fails, providing the error that occurred.
+ * @param failureBlock An OnlineImageFailureBlock that is called if the request fails, providing the error that occurred.
  * If there are multiple image sources then this block may be called multiple times, once for each source.
  */
--(void) loadImagesWithSuccess:(OnlineImageResultsBlock)onSuccess orFailure:(OnlineImageFailureBlock)onFailure;
+-(void) loadImagesWithSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock;
 
 /**
  * Continue a previous request for images, providing the next page of results.
  *
- * @param onSuccess An OnlineImageResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
+ * @param successBlock An OnlineImageResultsBlock that is called if the request succeeds, providing an array of OnlineImageInfo results.
  * If there are multiple image sources then this block may be called multiple times, once for each source.
- * @param onFailure An OnlineImageFailureBlock that is called if the request fails, providing the error that occurred.
+ * @param failureBlock An OnlineImageFailureBlock that is called if the request fails, providing the error that occurred.
  * If there are multiple image sources then this block may be called multiple times, once for each source.
  */
--(void) nextImagesWithSuccess:(OnlineImageResultsBlock)onSuccess orFailure:(OnlineImageFailureBlock)onFailure;
+-(void) nextImagesWithSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock;
 
 @end

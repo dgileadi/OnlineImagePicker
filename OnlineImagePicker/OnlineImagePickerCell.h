@@ -18,6 +18,9 @@
 /** Information about the image. */
 @property(nonatomic) id<OnlineImageInfo> imageInfo;
 
+/** The scale to load thumbnails at, useful for retina displays. */
+@property(nonatomic) CGFloat scale;
+
 /** A view to hold the image. */
 @property(nonatomic) IBOutlet UIImageView *imageView;
 
@@ -29,21 +32,5 @@
 
 /** The point in time when the image finished loading. */
 @property(nonatomic, readonly) NSDate *finishedLoad;
-
-/** Show indeterminate progress. */
--(void) showIndeterminateProgress;
-
-/** Set the progress to display while loading the image. */
--(void) setProgress:(CGFloat)progress;
-
-/**
- * Load an image.
- *
- * @param scale Should be the device's scale.
- */
--(void) loadImageAtScale:(CGFloat)scale;
-
-/** Set an image for display, hiding the progress bar. To set a temporary image use `imageView.image` instead. */
--(void) setImage:(UIImage *)image;
 
 @end

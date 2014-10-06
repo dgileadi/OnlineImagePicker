@@ -20,6 +20,7 @@
 @property(nonatomic) NSUInteger uncrawledIndex;
 @property(nonatomic) NSMutableArray *photos;
 @property(nonatomic) NSUInteger index;
+@property(nonatomic) NSUInteger requestedCount;
 @property(nonatomic, strong) OnlineImageSourceResultsBlock resultsBlock;
 @property(nonatomic) NSDate *loadStarted;
 
@@ -30,7 +31,7 @@
 
 -(id) init {
     if (self = [super init]) {
-        self.paths = [NSArray arrayWithObjects:@"/Camera Uploads", @"Photos", @"/", nil];
+        self.paths = [NSArray arrayWithObjects:@"/Camera Uploads", @"/Photos", @"/", nil];
         self.pathsIndex = 0;
         self.excludePaths = [NSSet setWithObject:@"/Screenshots"];
         self.crawled = [NSMutableSet set];
@@ -41,8 +42,6 @@
     }
     return self;
 }
-
-@synthesize pageSize;
 
 -(DBRestClient *) restClient {
     if (!_restClient && [DBSession sharedSession]) {
@@ -74,18 +73,19 @@
     return self.loadStarted;
 }
 
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.index = 0;
-    [self nextImages:resultsBlock];
+    [self next:count images:resultsBlock];
 }
 
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.resultsBlock = resultsBlock;
+    self.requestedCount = count;
     NSUInteger reported = 0;
     if (self.index < self.photos.count)
         reported = [self reportPhotos];
     
-    if (reported < self.pageSize) {
+    if (reported < count) {
         if (self.uncrawledIndex < self.uncrawled.count) {
             [self crawl:self.uncrawled[self.uncrawledIndex]];
             self.uncrawledIndex++;
@@ -108,7 +108,7 @@
     self.loadStarted = nil;
     NSUInteger reported = 0;
     if (self.index < self.photos.count) {
-        reported = MIN(self.pageSize, self.photos.count - self.index);
+        reported = MIN(self.requestedCount, self.photos.count - self.index);
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:reported];
         for (NSUInteger i = 0; i < reported; i++) {
             [results addObject:[[DropboxImageInfo alloc] initWithMetadata:self.photos[self.index]]];

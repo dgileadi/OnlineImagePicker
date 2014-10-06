@@ -24,8 +24,6 @@
 
 @implementation FacebookImageSource
 
-@synthesize pageSize;
-
 /** This image source is only available if we have a username to load images for. */
 -(BOOL) isAvailable {
     return [[FacebookAccount sharedInstance] isLoggedIn];
@@ -53,15 +51,15 @@
     return self.loadStarted;
 }
 
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.after = nil;
     self.nextRequested = NO;
-    [self nextImages:resultsBlock];
+    [self next:count images:resultsBlock];
 }
 
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.loadStarted = [NSDate date];
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%lu", (unsigned long) self.pageSize], @"limit", @"id,images,created_time,updated_time", @"fields", nil];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%lu", (unsigned long) count], @"limit", @"id,images,created_time,updated_time", @"fields", nil];
     if (self.after) {
         parameters[@"after"] = self.after;
         self.nextRequested = YES;

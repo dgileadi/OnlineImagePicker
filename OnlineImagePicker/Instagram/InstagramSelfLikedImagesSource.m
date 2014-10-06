@@ -18,8 +18,6 @@
 
 @implementation InstagramSelfLikedImagesSource
 
-@synthesize pageSize;
-
 /** This image source is only available if a user has been authenticated to Instagram. */
 -(BOOL) isAvailable {
     return [InstagramEngine sharedEngine].accessToken != nil;
@@ -41,14 +39,14 @@
     return self.loadStarted;
 }
 
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.pagination = nil;
-    [self nextImages:resultsBlock];
+    [self next:count images:resultsBlock];
 }
 
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.loadStarted = [NSDate date];
-    [[InstagramEngine sharedEngine] getMediaLikedBySelfWithCount:self.pageSize maxId:self.pagination.nextMaxId success:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+    [[InstagramEngine sharedEngine] getMediaLikedBySelfWithCount:count maxId:self.pagination.nextMaxId success:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
         self.loadStarted = nil;
         self.pagination = paginationInfo;
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];

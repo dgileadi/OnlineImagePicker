@@ -43,6 +43,15 @@
     return _imageView;
 }
 
+-(void) setImageInfo:(id<OnlineImageInfo>)imageInfo {
+    BOOL same = _imageInfo == imageInfo;
+    _imageInfo = imageInfo;
+    if (!imageInfo)
+        [self showIndeterminateProgress];
+    else if (!same)
+        [self loadImageAtScale:self.scale];
+}
+
 -(void) showIndeterminateProgress {
     self.progressView.hidden = NO;
     self.imageView.hidden = YES;

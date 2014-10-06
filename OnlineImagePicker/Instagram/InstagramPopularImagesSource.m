@@ -18,8 +18,6 @@
 
 @implementation InstagramPopularImagesSource
 
-@synthesize pageSize;
-
 -(BOOL) isAvailable {
     return YES;
 }
@@ -40,7 +38,7 @@
     return self.loadStarted;
 }
 
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.loadStarted = [NSDate date];
     [[InstagramEngine sharedEngine] getPopularMediaWithSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
         self.loadStarted = nil;
@@ -54,7 +52,7 @@
     }];
 }
 
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     resultsBlock(nil, nil);
 }
 

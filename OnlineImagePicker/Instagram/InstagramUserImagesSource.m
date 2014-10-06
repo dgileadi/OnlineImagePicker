@@ -18,8 +18,6 @@
 
 @implementation InstagramUserImagesSource
 
-@synthesize pageSize;
-
 /** This image source is only available if we have a username to load images for. */
 -(BOOL) isAvailable {
     return self.username != nil || [InstagramEngine sharedEngine].accessToken != nil;
@@ -41,24 +39,24 @@
     return self.loadStarted;
 }
 
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.pagination = nil;
     if (!self.username) {
         self.loadStarted = [NSDate date];
         [[InstagramEngine sharedEngine] getSelfUserDetailsWithSuccess:^(InstagramUser *userDetail) {
             self.username = userDetail.username;
-            [self nextImages:resultsBlock];
+            [self next:count images:resultsBlock];
         } failure:^(NSError *error) {
             NSLog(@"Error loading details for Instagram self user: %@", error);
         }];
     } else {
-        [self nextImages:resultsBlock];
+        [self next:count images:resultsBlock];
     }
 }
 
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.loadStarted = [NSDate date];
-    [[InstagramEngine sharedEngine] getMediaForUser:self.username count:self.pageSize maxId:self.pagination.nextMaxId withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+    [[InstagramEngine sharedEngine] getMediaForUser:self.username count:count maxId:self.pagination.nextMaxId withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
         self.loadStarted = nil;
         self.pagination = paginationInfo;
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];

@@ -17,8 +17,6 @@
 
 @implementation InstagramLocationImagesSource
 
-@synthesize pageSize;
-
 -(id) initWithLocation:(CLLocationCoordinate2D)location {
     if (self = [super init])
         self.location = location;
@@ -45,14 +43,14 @@
     return self.loadStarted;
 }
 
--(void) loadImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.pagination = nil;
-    [self nextImages:resultsBlock];
+    [self next:count images:resultsBlock];
 }
 
--(void) nextImages:(OnlineImageSourceResultsBlock)resultsBlock {
+-(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.loadStarted = [NSDate date];
-    [[InstagramEngine sharedEngine] getMediaAtLocation:self.location count:self.pageSize maxId:self.pagination.nextMaxId withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
+    [[InstagramEngine sharedEngine] getMediaAtLocation:self.location count:count maxId:self.pagination.nextMaxId withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
         self.loadStarted = nil;
         NSMutableArray *results = [NSMutableArray arrayWithCapacity:media.count];
         for (InstagramMedia *item in media)

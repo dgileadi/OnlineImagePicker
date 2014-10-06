@@ -22,7 +22,6 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 @interface OnlineImagePickerController()
 
 @property(nonatomic) NSMutableArray *imageInfo;
-@property(nonatomic) NSUInteger requested;
 @property(nonatomic) NSTimer *timer;
 
 @end
@@ -110,9 +109,26 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 
 -(void) loadImages {
     OnlineImageResultsBlock resultsBlock = ^(NSArray *results, id<OnlineImageSource> source) {
-        for (id<OnlineImageInfo> info in results)
-            [self.imageInfo addObject:info];
-        [self.collectionView reloadData];
+        // if we have a spinner, reload it
+        BOOL spinnerCell = [self.collectionView numberOfItemsInSection:0] > self.imageInfo.count;
+        
+        // insert index paths
+        NSUInteger count = results.count;
+        if (count && spinnerCell && !self.imageManager.isLoading)
+            count--;
+        else if (!spinnerCell && self.imageManager.isLoading)
+            count++;
+        NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:count];
+        for (NSUInteger i = 0; i < count; i++)
+            [indexPaths addObject:[NSIndexPath indexPathForItem:self.imageInfo.count + i inSection:0]];
+        
+        [self.imageInfo addObjectsFromArray:results];
+        
+NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell, self.imageManager.isLoading);
+        
+        [self.collectionView insertItemsAtIndexPaths:indexPaths];
+        if (spinnerCell)
+            [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:self.imageInfo.count - results.count inSection:0]]];
     };
     OnlineImageFailureBlock failureBlock = ^(NSError *error, id<OnlineImageSource> source) {
         
@@ -120,17 +136,12 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
         
         
         NSLog(@"Error from %@: %@", source, error);
-        
-        [self.collectionView reloadData];
     };
     
-    if (!self.requested) {
-        self.requested += self.imageManager.pageSize;
+    if (!self.imageInfo.count && !self.imageManager.isLoading)
         [self.imageManager loadImagesWithSuccess:resultsBlock orFailure:failureBlock];
-    } else if ([self.imageManager hasMoreImages]) {
-        self.requested += self.imageManager.pageSize;
+    else if ([self.imageManager hasMoreImages])
         [self.imageManager nextImagesWithSuccess:resultsBlock orFailure:failureBlock];
-    }
 }
 
 -(void) createTimer {
@@ -172,7 +183,8 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     layout.sectionInset = UIEdgeInsetsZero;
     self.collectionView.collectionViewLayout = layout;
     
-    self.imageManager.pageSize = count * ceil(self.view.bounds.size.height / cellHeight);
+    // load two screens of images at a time
+    self.imageManager.pageSize = count * ceil(self.view.bounds.size.height / cellHeight) * 2;
 }
 
 -(void) createToolbar {
@@ -264,25 +276,26 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 #pragma mark - UICollectionViewDataSource
 
 -(NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return MAX(self.requested, self.imageSources.count);
+    if (self.imageManager.isLoading) {
+NSLog(@"Loading, so count is %d", self.imageInfo.count + 1);
+        return self.imageInfo.count + 1;
+    }
+NSLog(@"Not loading, so count is %d", self.imageInfo.count);
+    return self.imageInfo.count;
 }
 
 #pragma mark - UICollectionViewDelegate
 
 -(UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     OnlineImagePickerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
+    cell.scale = self.highResThumbnails ? self.view.window.screen.scale : 1;
     
     if (indexPath.item < self.imageInfo.count) {
         id<OnlineImageInfo> imageInfo = [self.imageInfo objectAtIndex:indexPath.item];
         cell.imageInfo = imageInfo;
-        
-        CGFloat scale = self.highResThumbnails ? self.view.window.screen.scale : 1;
-        [cell loadImageAtScale:scale];
-        
 // TODO: maybe some kind of placeholder
     } else {
         cell.imageInfo = nil;
-        [cell showIndeterminateProgress];
     }
     
     return cell;
@@ -292,7 +305,8 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     if (self.pickerDelegate) {
         OnlineImagePickerCell *cell = (OnlineImagePickerCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
-        [self.pickerDelegate imagePickedWithInfo:cell.imageInfo andThumbnail:cell.imageView.image];
+        if (cell.imageInfo)
+            [self.pickerDelegate imagePickedWithInfo:cell.imageInfo andThumbnail:cell.imageView.image];
     }
 }
 
