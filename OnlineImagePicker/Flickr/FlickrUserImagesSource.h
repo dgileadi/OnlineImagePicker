@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OnlineImageSource.h"
+#import "FlickrImagesSource.h"
 
 /**
  * Provides user images from Flickr. If `username` is not populated or the user is not logged in then only public photos will be displayed.
  */
-@interface FlickrUserImagesSource : NSObject <OnlineImageSource>
+@interface FlickrUserImagesSource : FlickrImagesSource
 
 /** The username to get images for. If none is provided it defaults to the logged-in user. */
 @property(nonatomic) NSString *username;

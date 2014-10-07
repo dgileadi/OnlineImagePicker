@@ -26,7 +26,7 @@ PODS:
   - Expecta+Snapshots (1.2.1):
     - Expecta
     - FBSnapshotTestCase
-  - Facebook-iOS-SDK (3.18.2):
+  - Facebook-iOS-SDK (3.19.0):
     - Bolts (~> 1.0)
   - FBSnapshotTestCase (1.2)
   - FlickrKit (1.0.4)
@@ -62,7 +62,7 @@ SPEC CHECKSUMS:
   Dropbox-iOS-SDK: 367160c05e279e7fa3205f3233d1873b7a986ee6
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   Expecta+Snapshots: 30c28e3d8104665ee70e32df1cfc030bb37a8a6c
-  Facebook-iOS-SDK: 1193bafaca986a31d37c3e6fa845b99d6eaadaf8
+  Facebook-iOS-SDK: cb7d74759d0b1ba546e6e6f1dde407b0d4e448d6
   FBSnapshotTestCase: 4159bdf235fdae25aa7d813f1452a4f05ad4f9cd
   FlickrKit: 1bbc5c91f065fa0d7ce4119c5d5c63a9241eea73
   InstagramKit: f96f2e6ec35efe6c2bfc33b63b2ba56d9856c0c9

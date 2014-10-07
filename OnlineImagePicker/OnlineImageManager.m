@@ -199,7 +199,7 @@
     if (results.count)
         successBlock(results, source);
     
-    if (results.count < sourceCount) {
+    if (results.count < sourceCount && self.requestedToSelf > self.receivedFromSources) {
         // if we didn't get enough images from this source, fill from another source
         self.sourcePageSize = [self calcSourcePageSizeFrom:self.pageSize includeMoreImages:YES]; // in case one or more sources became unavailable or exhausted
         [self next:sourceCount - results.count imagesFromAllSources:NO withSuccess:successBlock orFailure:failureBlock];
