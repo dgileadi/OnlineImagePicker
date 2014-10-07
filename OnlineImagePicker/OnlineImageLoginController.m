@@ -50,6 +50,10 @@
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:spinner];
     self.navigationItem.rightBarButtonItem = item;
     
+    [self loadLoginURL];
+}
+
+-(void) loadLoginURL {
     NSURL *url = [self loginURL];
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
 }

@@ -17,4 +17,7 @@
 /** The single shared instance of this class. */
 +(DropboxAccount *) sharedInstance;
 
+/** Register this application with the Dropbox SDK. In most cases this will be called automatically but it doesn't hurt to call it yourself. */
+-(void) registerWithDropbox;
+
 @end

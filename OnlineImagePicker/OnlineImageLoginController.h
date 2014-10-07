@@ -28,4 +28,7 @@
 /** *Subclasses must extend:* handle a redirect, returning `YES` if it's a login finished redirect and was handled. */
 -(BOOL) handleRedirect:(NSURL *)url;
 
+/** Subclasses may extend: if you want custom behavior beyond loading the `loginURL` then override this method. */
+-(void) loadLoginURL;
+
 @end

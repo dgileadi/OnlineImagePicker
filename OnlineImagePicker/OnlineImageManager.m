@@ -7,13 +7,12 @@
 //
 
 #import "OnlineImageManager.h"
-#import <InstagramKit/InstagramKit.h>
+
 
 @interface OnlineImageManager()
 
 @property(nonatomic) NSMutableArray *sources;
 @property(nonatomic) NSMutableArray *accounts;
-@property(nonatomic) NSDate *lastRequest;
 @property(nonatomic) NSUInteger sourcePageSize;
 @property(nonatomic) NSUInteger requestedToSelf;
 @property(nonatomic) NSUInteger requestedFromSources;
@@ -21,6 +20,7 @@
 @property(nonatomic) BOOL inNext;
 
 @end
+
 
 @implementation OnlineImageManager
 
@@ -151,9 +151,7 @@
 -(void) next:(NSUInteger)sourceCount imagesFromAllSources:(BOOL)allSources withSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock {
     // prevent recursion, which can happen when sources call their blocks synchronously
     if (self.inNext) {
-        // if we're already in this method, just call us later
-        dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW, self.nextQueryTimeout * NSEC_PER_SEC);
-        dispatch_after(when, dispatch_get_main_queue(), ^(void){
+        dispatch_async(dispatch_get_main_queue(), ^(void){
             [self next:sourceCount imagesFromAllSources:allSources withSuccess:successBlock orFailure:failureBlock];
         });
         return;
@@ -168,11 +166,13 @@
             loadWait = MAX(loadWait, -source.loadStartTime.timeIntervalSinceNow);
         }
     
+    BOOL requested = NO;
     for (id<OnlineImageSource> source in self.sources)
-        // query if available and:
+        // query if available and has more images and:
         //  1) the source isn't currently loading and either no other source is loading or we're past the next query timeout
         //  2) the source is currently loading but has passed its requery timeout
-        if (source.isAvailable && ((!source.isLoading && (!anyLoading || loadWait > self.nextQueryTimeout)) || -source.loadStartTime.timeIntervalSinceNow > self.requeryTimeout)) {
+        if (source.isAvailable && source.hasMoreImages && ((!source.isLoading && (!anyLoading || loadWait > self.nextQueryTimeout)) || -source.loadStartTime.timeIntervalSinceNow > self.requeryTimeout)) {
+            requested = YES;
             self.requestedFromSources += sourceCount;
             [source next:sourceCount images:^(NSArray *results, NSError  *error) {
                 [self handleResults:results andError:error fromSource:source expectedCount:sourceCount withSuccess:successBlock orFailure:failureBlock];
@@ -182,6 +182,13 @@
                 break;
         }
     
+    if (!requested) {
+        dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW, MAX(0, self.nextQueryTimeout - loadWait) * NSEC_PER_SEC);
+        dispatch_after(when, dispatch_get_main_queue(), ^(void){
+            [self next:sourceCount imagesFromAllSources:allSources withSuccess:successBlock orFailure:failureBlock];
+        });
+    }
+    
     self.inNext = NO;
 }
 
@@ -189,15 +196,15 @@
     self.receivedFromSources += results.count;
     if (error)
         failureBlock(error, source);
-    else if (results.count)
+    if (results.count)
         successBlock(results, source);
     
-    // if we didn't get enough images, fill from another source
     if (results.count < sourceCount) {
+        // if we didn't get enough images from this source, fill from another source
         self.sourcePageSize = [self calcSourcePageSizeFrom:self.pageSize includeMoreImages:YES]; // in case one or more sources became unavailable or exhausted
         [self next:sourceCount - results.count imagesFromAllSources:NO withSuccess:successBlock orFailure:failureBlock];
-        // or if we need an entirely new page of results, ask for it
     } else if (self.requestedToSelf > self.requestedFromSources) {
+        // or if we need an entirely new page of results, ask for it
         NSUInteger count = [self calcSourcePageSizeFrom:self.requestedToSelf - self.requestedFromSources includeMoreImages:YES];
         [self next:count imagesFromAllSources:YES withSuccess:successBlock orFailure:failureBlock];
     }

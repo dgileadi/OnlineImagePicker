@@ -13,6 +13,7 @@
 #import "InstagramUserImagesSource.h"
 #import "FacebookMyUploadedImagesSource.h"
 #import "FacebookImagesOfMeSource.h"
+#import "FlickrUserImagesSource.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 
@@ -83,8 +84,8 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     [self addImageSource:[[DropboxImagesSource alloc] init]];
     [self addImageSource:[[FacebookMyUploadedImagesSource alloc] init]];
     [self addImageSource:[[FacebookImagesOfMeSource alloc] init]];
+    [self addImageSource:[[FlickrUserImagesSource alloc] init]];
     [self addImageSource:[[InstagramUserImagesSource alloc] init]];
-    // TODO: Flickr user images
 }
 
 -(NSArray *)imageSources {
@@ -108,27 +109,31 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 }
 
 -(void) loadImages {
+    __weak OnlineImagePickerController *wself = self;
     OnlineImageResultsBlock resultsBlock = ^(NSArray *results, id<OnlineImageSource> source) {
+        if (!wself)
+            return;
+        
         // if we have a spinner, reload it
-        BOOL spinnerCell = [self.collectionView numberOfItemsInSection:0] > self.imageInfo.count;
+        BOOL spinnerCell = [wself.collectionView numberOfItemsInSection:0] > wself.imageInfo.count;
         
         // insert index paths
         NSUInteger count = results.count;
-        if (count && spinnerCell && !self.imageManager.isLoading)
+        if (count && spinnerCell && !wself.imageManager.isLoading)
             count--;
-        else if (!spinnerCell && self.imageManager.isLoading)
+        else if (!spinnerCell && wself.imageManager.isLoading)
             count++;
         NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:count];
         for (NSUInteger i = 0; i < count; i++)
-            [indexPaths addObject:[NSIndexPath indexPathForItem:self.imageInfo.count + i inSection:0]];
+            [indexPaths addObject:[NSIndexPath indexPathForItem:wself.imageInfo.count + i inSection:0]];
         
-        [self.imageInfo addObjectsFromArray:results];
+        [wself.imageInfo addObjectsFromArray:results];
         
-NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell, self.imageManager.isLoading);
+NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell, wself.imageManager.isLoading);
         
-        [self.collectionView insertItemsAtIndexPaths:indexPaths];
+        [wself.collectionView insertItemsAtIndexPaths:indexPaths];
         if (spinnerCell)
-            [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:self.imageInfo.count - results.count inSection:0]]];
+            [wself.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:wself.imageInfo.count - results.count inSection:0]]];
     };
     OnlineImageFailureBlock failureBlock = ^(NSError *error, id<OnlineImageSource> source) {
         
@@ -138,9 +143,10 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
         NSLog(@"Error from %@: %@", source, error);
     };
     
-    if (!self.imageInfo.count && !self.imageManager.isLoading)
+    if (!self.imageInfo.count && !self.imageManager.isLoading) {
         [self.imageManager loadImagesWithSuccess:resultsBlock orFailure:failureBlock];
-    else if ([self.imageManager hasMoreImages])
+        [self.collectionView reloadData];
+    } else if ([self.imageManager hasMoreImages])
         [self.imageManager nextImagesWithSuccess:resultsBlock orFailure:failureBlock];
 }
 
@@ -152,20 +158,6 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     // TODO: check whether we need to reap timed-out images, do so
     
 }
-
-
-/*
- How to handle timeouts and loading more images:
- 1. We can't ask a source to load more images when it is already loading them—it would load duplicates.
- 2. Once a source delivers, we may want to query it again...
-    - if the user has scrolled and we need images immediately
-    - otherwise wait for the rest?
- 3. If all sources have finished, preload a page or two of results
-    - Latency is probably worse than bandwidth (?), so perhaps load a couple pages at a time
- 4. If a source doesn't load after a long time, assume it won't and add it to the available list
- */
-
-
 
 -(void) updateCellLayoutToSize:(CGSize)size {
     CGFloat width = size.width;
@@ -242,6 +234,8 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     
     UIBarButtonItem *accountsButton = [self.toolbar.items lastObject];
     accountsButton.title = [self accountsButtonTitle];
+    
+    [self loadImages];
 }
 
 #pragma mark - UICollectionView

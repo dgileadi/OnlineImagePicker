@@ -68,6 +68,12 @@
 		BD34988A19DA1C7E0051F41C /* InstagramAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstagramAccount.h; sourceTree = "<group>"; };
 		BD34988B19DA1C7E0051F41C /* InstagramAccount.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstagramAccount.m; sourceTree = "<group>"; };
 		BD34988E19DB56E60051F41C /* OnlineImageAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageAccount.h; path = ../OnlineImagePicker/OnlineImageAccount.h; sourceTree = "<group>"; };
+		BD34C04919E341C10029A482 /* FlickrUserImagesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlickrUserImagesSource.h; sourceTree = "<group>"; };
+		BD34C04A19E341C10029A482 /* FlickrUserImagesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlickrUserImagesSource.m; sourceTree = "<group>"; };
+		BD34C04B19E341D60029A482 /* FlickrImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlickrImageInfo.h; sourceTree = "<group>"; };
+		BD34C04C19E341D60029A482 /* FlickrImageInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlickrImageInfo.m; sourceTree = "<group>"; };
+		BD34C04D19E341E30029A482 /* FlickrAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlickrAccount.h; sourceTree = "<group>"; };
+		BD34C04E19E341E30029A482 /* FlickrAccount.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlickrAccount.m; sourceTree = "<group>"; };
 		BD67B84F19D70849005C8FD2 /* OnlineImageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageInfo.h; path = ../OnlineImagePicker/OnlineImageInfo.h; sourceTree = "<group>"; };
 		BD67B85019D70849005C8FD2 /* OnlineImageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImageManager.h; path = ../OnlineImagePicker/OnlineImageManager.h; sourceTree = "<group>"; };
 		BD67B85119D70849005C8FD2 /* OnlineImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OnlineImagePicker.h; path = ../OnlineImagePicker/OnlineImagePicker.h; sourceTree = "<group>"; };
@@ -301,6 +307,12 @@
 		BD67B86219D708AD005C8FD2 /* Flickr */ = {
 			isa = PBXGroup;
 			children = (
+				BD34C04919E341C10029A482 /* FlickrUserImagesSource.h */,
+				BD34C04A19E341C10029A482 /* FlickrUserImagesSource.m */,
+				BD34C04B19E341D60029A482 /* FlickrImageInfo.h */,
+				BD34C04C19E341D60029A482 /* FlickrImageInfo.m */,
+				BD34C04D19E341E30029A482 /* FlickrAccount.h */,
+				BD34C04E19E341E30029A482 /* FlickrAccount.m */,
 			);
 			name = Flickr;
 			path = ../OnlineImagePicker/Flickr;

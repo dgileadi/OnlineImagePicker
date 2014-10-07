@@ -52,7 +52,7 @@ You might ask, "can't OnlineImagePicker do this setup itself and save me the bot
 
 However, if you'd rather not bother with a particular kind of account then you can specify the list of image sources to OnlineImagePickerController when you initialize it:
 
-	NSArray *sources = [NSArray arrayWithObjects:[[FacebookUserImagesSource alloc] init], [[PhotoLibraryImageSource alloc] init], nil];
+	NSArray *sources = @[[[FacebookUserImagesSource alloc] init], [[PhotoLibraryImageSource alloc] init]];
 	OnlineImagePickerController *picker = [[OnlineImagePickerController alloc] initWithDelegate:self andImageSources:sources];
 
 For each source you don't include you can skip the setup section below. Probably. Not tested. In any case the above initializer also lets you use other image sources that aren't included in the defaults, like `InstagramPopularImagesSource`.
@@ -81,10 +81,10 @@ You'll also need to make your AppDelegate handle redirects from Dropbox, somethi
 
 Finally you'll need to make your Dropbox app key and secret available to OnlineImagePicker. An easy way to do that is to add the following values to your app's Info.plist:
 
-Key						| Value
------------------------ | ------
-DropboxAppKey			| [The App Key that Dropbox gave you]
-DropboxAppSecret		| [The App Secret that Dropbox gave you]
+Key					| Value
+------------------- | ------
+DropboxAppKey		| [The App Key that Dropbox gave you]
+DropboxAppSecret	| [The App Secret that Dropbox gave you]
 
 If you'd rather not store them in your Info.plist then you can instead put the following in your AppDelegate's `application:didFinishLaunchingWithOptions:` method:
 
@@ -120,12 +120,29 @@ Also in your AppDelegate add the following code to your `applicationDidBecomeAct
 
 This handles the situation where the app moved to the background in the middle of logging in.
 
+Setting up Flickr
+-----------------
+
+First [register a new application with Flickr](https://www.flickr.com/services/apps/create/).
+
+You'll need to make the API key and secret they'll give you available to OnlineImagePicker. An easy way to do that is to add the following values to your app's Info.plist:
+
+Key				| Value
+--------------- | ------
+FlickrAPIKey	| [The API Key that Flickr gave you]
+FlickrSecret	| [The Shared Secret that Flickr gave you]
+
+If you'd rather not store them in your Info.plist then you can instead put the following in your AppDelegate's `application:didFinishLaunchingWithOptions:` method:
+
+	[[FlickrKit sharedFlickrKit] initializeWithAPIKey:@"INSERT_API_KEY"
+	                                     sharedSecret:@"INSERT_SECRET"];
+
 Setting up Instagram
 --------------------
 
 First [register a new application with Instagram](http://instagram.com/developer/clients/manage/). Make sure the Redirect URI you use is something like `appname://instagram_oauth_redirect` where `appname` is a prefix specific to your app.
 
-And then add the following values to your app's Info.plist (or to InstagramKit.plist):
+Then add the following values to your app's Info.plist (or to InstagramKit.plist):
 
 Key								| Value
 ------------------------------- | ------
@@ -134,3 +151,7 @@ InstagramKitAppRedirectURL		| [The Redirect URI you gave Instagram, like `appnam
 InstagramKitBaseUrl				| `https://api.instagram.com/v1/`
 InstagramKitAuthorizationUrl	| `https://api.instagram.com/oauth/authorize/`
 
+Building Your Own Picker
+------------------------
+
+You may decide that you'd prefer a custom UI instead of using OnlineImagePickerController. That's fine; you're welcome to do so. Under the hood OnlineImagePickerController uses an instance of OnlineImageManager to provide its images. You're welcome to do the same for your custom UI.

@@ -18,6 +18,8 @@
 #import "FacebookMyUploadedImagesSource.h"
 #import "FacebookImagesOfMeSource.h"
 
+#import "FlickrUserImagesSource.h"
+
 #import "InstagramUserImagesSource.h"
 #import "InstagramUserFeedImageSource.h"
 #import "InstagramPopularImagesSource.h"

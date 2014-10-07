@@ -39,6 +39,7 @@
         self.uncrawledIndex = 0;
         self.photos = [NSMutableArray array];
         self.index = 0;
+        [[DropboxAccount sharedInstance] registerWithDropbox];
     }
     return self;
 }
