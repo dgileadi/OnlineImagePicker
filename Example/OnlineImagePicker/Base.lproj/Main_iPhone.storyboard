@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5023" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment defaultVersion="1808" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
-        <!--class Prefix:identifier View Controller-->
+        <!--Example Online Image Picker Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="OnlineImageViewController" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ExampleOnlineImagePickerController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -17,9 +18,62 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <segue destination="ZTX-Ly-sD4" kind="replace" identifier="ShowImage" splitViewControllerTargetIndex="1" id="1hs-DG-sko"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Example Online Image View Controller-->
+        <scene sceneID="QY0-1s-ge0">
+            <objects>
+                <viewController id="ZTX-Ly-sD4" customClass="ExampleOnlineImageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lsb-cB-ZhM"/>
+                        <viewControllerLayoutGuide type="bottom" id="0AB-3E-Ryg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kEd-B5-yMt">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s5o-Su-NFr">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tp4-Rx-Gym">
+                                        <rect key="frame" x="71" y="72" width="32" height="20"/>
+                                    </imageView>
+                                </subviews>
+                            </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DBf-Nv-EeZ" customClass="M13ProgressViewRing">
+                                <rect key="frame" x="110" y="234" width="100" height="100"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="ZnO-V6-Dme"/>
+                                    <constraint firstAttribute="height" constant="100" id="o8c-lj-rHL"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="s5o-Su-NFr" firstAttribute="top" secondItem="kEd-B5-yMt" secondAttribute="top" id="O2p-Jx-GBN"/>
+                            <constraint firstAttribute="centerY" secondItem="DBf-Nv-EeZ" secondAttribute="centerY" id="bGT-z1-8cU"/>
+                            <constraint firstAttribute="centerX" secondItem="DBf-Nv-EeZ" secondAttribute="centerX" id="gnb-HO-ghs"/>
+                            <constraint firstItem="s5o-Su-NFr" firstAttribute="leading" secondItem="kEd-B5-yMt" secondAttribute="leading" id="oZ2-aY-zxB"/>
+                            <constraint firstAttribute="trailing" secondItem="s5o-Su-NFr" secondAttribute="trailing" id="qUK-jA-nSu"/>
+                            <constraint firstAttribute="bottom" secondItem="s5o-Su-NFr" secondAttribute="bottom" id="spd-hc-BzA"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="XyJ-dC-dfy"/>
+                    <connections>
+                        <outlet property="imageView" destination="tp4-Rx-Gym" id="cPf-f1-Idz"/>
+                        <outlet property="progressView" destination="DBf-Nv-EeZ" id="45I-lL-YRG"/>
+                        <outlet property="scrollView" destination="s5o-Su-NFr" id="0z9-X6-dzR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XeP-Oz-8Nf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="546" y="136"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

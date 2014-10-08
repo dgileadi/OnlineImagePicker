@@ -19,7 +19,17 @@
  */
 @protocol OnlineImagePickerDelegate <NSObject>
 
+/**
+ * Called when the user has picked an image.
+ *
+ * @param info The information about the image, including a method for downloading the full-size image.
+ * @param thumbnail The thumbnail image used by the picker to show a preview of the image.
+ */
 -(void) imagePickedWithInfo:(id<OnlineImageInfo>)info andThumbnail:(UIImage *)thumbnail;
+
+/**
+ * Called when a user closes the picker by tapping the Cancel button or by tapping the previous item in a UINavigationController stack.
+ */
 -(void) cancelledPicker;
 
 @end
@@ -28,6 +38,11 @@
 /**
  * An implementation of UICollectionViewController that supports loading images from online sources like Facebook, Instagram and Flickr.
  * You must set `pickerDelegate` to get notified when images are picked.
+ *
+ * This controller shows a toolbar as appropriate. If it's part of a UINavigationController stack then it adds an Accounts button to the
+ * right side of its navigation toolbar. Otherwise it shows a toolbar. If it's presented modally then the toolbar has an Accounts button
+ * on the right side and a Cancel button on the left side (which invokes the delegate's `cancelledPicker` method). Otherwise it just has
+ * the Accounts button on the right side.
  */
 @interface OnlineImagePickerController : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UIToolbarDelegate, OnlineImageAccountsDelegate>
 

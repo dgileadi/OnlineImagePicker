@@ -17,7 +17,7 @@
 @property(nonatomic) NSUInteger requestedToSelf;
 @property(nonatomic) NSUInteger requestedFromSources;
 @property(nonatomic) NSUInteger receivedFromSources;
-@property(nonatomic) BOOL inNext;
+@property(nonatomic) BOOL inLoadCall;
 
 @end
 
@@ -29,12 +29,12 @@
         self.sources = [NSMutableArray array];
         self.accounts = [NSMutableArray array];
         self.pageSize = 64;
-        self.nextQueryTimeout = 5;
-        self.requeryTimeout = 15;
+        self.nextQueryTimeout = 3;
+        self.requeryTimeout = 10;
         self.requestedToSelf = 0;
         self.requestedFromSources = 0;
         self.receivedFromSources = 0;
-        self.inNext = NO;
+        self.inLoadCall = NO;
     }
     return self;
 }
@@ -124,16 +124,24 @@
 
 -(void) loadImagesWithSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock {
     self.sourcePageSize = [self calcSourcePageSizeFrom:self.pageSize includeMoreImages:NO];
-    self.requestedToSelf = 0;
+    self.requestedToSelf = self.pageSize;
     self.requestedFromSources = 0;
     self.receivedFromSources = 0;
-    for (id<OnlineImageSource> source in self.sources)
-        if (source.isAvailable) {
+    self.inLoadCall = YES;
+    for (id<OnlineImageSource> source in self.sources) {
+        // query if available and has more images and:
+        //  1) the source isn't currently loading and either no other source is loading or we're past the next query timeout
+        //  2) the source is currently loading but has passed its requery timeout
+        if (source.isAvailable)
             self.requestedFromSources += self.sourcePageSize;
-            [source load:self.sourcePageSize images:^(NSArray *results, NSError *error) {
+            [source load:self.sourcePageSize images:^(NSArray *results, NSError  *error) {
                 [self handleResults:results andError:error fromSource:source expectedCount:self.sourcePageSize withSuccess:successBlock orFailure:failureBlock];
             }];
-        }
+    }
+    
+    [self asyncAfter:self.nextQueryTimeout next:self.sourcePageSize imagesFromAllSources:YES withSuccess:successBlock orFailure:failureBlock];
+    
+    self.inLoadCall = NO;
 }
 
 -(void) nextImagesWithSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock {
@@ -143,20 +151,18 @@
         successBlock(nil, nil);
     } else {
         self.requestedToSelf += self.pageSize;
-        self.inNext = NO;
+        self.inLoadCall = NO;
         [self next:self.sourcePageSize imagesFromAllSources:YES withSuccess:successBlock orFailure:failureBlock];
     }
 }
 
 -(void) next:(NSUInteger)sourceCount imagesFromAllSources:(BOOL)allSources withSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock {
     // prevent recursion, which can happen when sources call their blocks synchronously
-    if (self.inNext) {
-        dispatch_async(dispatch_get_main_queue(), ^(void){
-            [self next:sourceCount imagesFromAllSources:allSources withSuccess:successBlock orFailure:failureBlock];
-        });
+    if (self.inLoadCall) {
+        [self asyncAfter:0 next:sourceCount imagesFromAllSources:allSources withSuccess:successBlock orFailure:failureBlock];
         return;
     }
-    self.inNext = YES;
+    self.inLoadCall = YES;
     
     NSTimeInterval loadWait = 0;
     BOOL anyLoading = NO;
@@ -166,13 +172,11 @@
             loadWait = MAX(loadWait, -source.loadStartTime.timeIntervalSinceNow);
         }
     
-    BOOL requested = NO;
     for (id<OnlineImageSource> source in self.sources)
         // query if available and has more images and:
         //  1) the source isn't currently loading and either no other source is loading or we're past the next query timeout
         //  2) the source is currently loading but has passed its requery timeout
         if (source.isAvailable && source.hasMoreImages && ((!source.isLoading && (!anyLoading || loadWait > self.nextQueryTimeout)) || -source.loadStartTime.timeIntervalSinceNow > self.requeryTimeout)) {
-            requested = YES;
             self.requestedFromSources += sourceCount;
             [source next:sourceCount images:^(NSArray *results, NSError  *error) {
                 [self handleResults:results andError:error fromSource:source expectedCount:sourceCount withSuccess:successBlock orFailure:failureBlock];
@@ -182,14 +186,17 @@
                 break;
         }
     
-    if (!requested) {
-        dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW, MAX(0, self.nextQueryTimeout - loadWait) * NSEC_PER_SEC);
-        dispatch_after(when, dispatch_get_main_queue(), ^(void){
-            [self next:sourceCount imagesFromAllSources:allSources withSuccess:successBlock orFailure:failureBlock];
-        });
-    }
+    if (allSources && self.requestedToSelf > self.receivedFromSources)
+        [self asyncAfter:self.nextQueryTimeout - loadWait next:sourceCount imagesFromAllSources:allSources withSuccess:successBlock orFailure:failureBlock];
     
-    self.inNext = NO;
+    self.inLoadCall = NO;
+}
+
+-(void) asyncAfter:(NSTimeInterval)wait next:(NSUInteger)sourceCount imagesFromAllSources:(BOOL)allSources withSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock {
+    dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW, MAX(0, wait) * NSEC_PER_SEC);
+    dispatch_after(when, dispatch_get_main_queue(), ^(void){
+        [self next:sourceCount imagesFromAllSources:allSources withSuccess:successBlock orFailure:failureBlock];
+    });
 }
 
 -(void) handleResults:(NSArray *)results andError:(NSError *)error fromSource:(id<OnlineImageSource>)source expectedCount:(NSUInteger)sourceCount withSuccess:(OnlineImageResultsBlock)successBlock orFailure:(OnlineImageFailureBlock)failureBlock {

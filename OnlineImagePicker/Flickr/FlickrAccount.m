@@ -44,12 +44,6 @@ static NSString *kFlickrSecretName = @"FlickrSecret";
         if (apiKey && secret)
             [[FlickrKit sharedFlickrKit] initializeWithAPIKey:apiKey sharedSecret:secret];
     }
-    if (![FlickrKit sharedFlickrKit].authorized) {
-        [[FlickrKit sharedFlickrKit] checkAuthorizationOnCompletion:^(NSString *userName, NSString *userId, NSString *fullName, NSError *error) {
-            if (error)
-                NSLog(@"Error auto-logging into Flickr: %@", error);
-        }];
-    }
 }
 
 -(UIImage *) icon {

@@ -12,7 +12,7 @@
 #import "OnlineImageLoginController.h"
 
 
-static const NSString *kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramAccessToken";
+static NSString * const kInstagramAccessTokenKey = @"OnlineImagePicker_InstagramAccessToken";
 
 
 @interface InstagramLoginController : OnlineImageLoginController

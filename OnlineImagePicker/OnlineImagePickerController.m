@@ -109,6 +109,9 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 }
 
 -(void) loadImages {
+    if (self.imageManager.isLoading)
+        return;
+    
     __weak OnlineImagePickerController *wself = self;
     OnlineImageResultsBlock resultsBlock = ^(NSArray *results, id<OnlineImageSource> source) {
         if (!wself)
@@ -143,7 +146,7 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
         NSLog(@"Error from %@: %@", source, error);
     };
     
-    if (!self.imageInfo.count && !self.imageManager.isLoading) {
+    if (!self.imageInfo.count) {
         [self.imageManager loadImagesWithSuccess:resultsBlock orFailure:failureBlock];
         [self.collectionView reloadData];
     } else if ([self.imageManager hasMoreImages])
@@ -180,22 +183,33 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
 }
 
 -(void) createToolbar {
-    UIToolbar *toolbar = [[UIToolbar alloc] init];
-    toolbar.translatesAutoresizingMaskIntoConstraints = NO;
-    toolbar.delegate = self;
-    
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPicker)];
-    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     UIBarButtonItem *accounts = [[UIBarButtonItem alloc] initWithTitle:[self accountsButtonTitle] style:UIBarButtonItemStylePlain target:self action:@selector(showSelectAccounts)];
-    toolbar.items = [NSArray arrayWithObjects:cancel, space, accounts, nil];
+    NSArray *items = nil;
+    if (self.navigationController) {
+        self.navigationItem.rightBarButtonItem = accounts;
+    } else if (self.presentingViewController) {
+        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.pickerDelegate action:@selector(cancelledPicker)];
+        UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        items = @[cancel, space, accounts];
+    } else if (!self.parentViewController) {
+        UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        items = @[space, accounts];
+    }
     
-    self.toolbar = toolbar;
-    [self.view addSubview:toolbar];
-    
-    id topGuide = self.topLayoutGuide;
-    NSDictionary *views = NSDictionaryOfVariableBindings(topGuide, toolbar);
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[toolbar]|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[toolbar]" options:0 metrics:nil views:views]];
+    if (items) {
+        UIToolbar *toolbar = [[UIToolbar alloc] init];
+        toolbar.translatesAutoresizingMaskIntoConstraints = NO;
+        toolbar.delegate = self;
+        toolbar.items = items;
+        
+        self.toolbar = toolbar;
+        [self.view addSubview:toolbar];
+        
+        id topGuide = self.topLayoutGuide;
+        NSDictionary *views = NSDictionaryOfVariableBindings(topGuide, toolbar);
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[toolbar]|" options:0 metrics:nil views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[toolbar]" options:0 metrics:nil views:views]];
+    }
 }
 
 -(NSString *) accountsButtonTitle {
@@ -219,10 +233,6 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     [self presentViewController:accountsController animated:YES completion:nil];
 }
 
--(void) cancelPicker {
-    [self.pickerDelegate cancelledPicker];
-}
-
 #pragma mark - OnlineImageAccountsDelegate
 
 -(NSArray *) accounts {
@@ -244,12 +254,15 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     [super viewDidLoad];
     [self.collectionView registerClass:[OnlineImagePickerCell class] forCellWithReuseIdentifier:kCellIdentifier];
     [self updateCellLayoutToSize:self.view.bounds.size];
-    if (!self.toolbar)
-        [self createToolbar];
     if (!self.timer)
         [self createTimer];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     [self loadImages];
+}
+
+-(void) viewWillAppear:(BOOL)animated {
+    if (!self.toolbar)
+        [self createToolbar];
 }
 
 -(void) viewWillLayoutSubviews {
@@ -266,6 +279,11 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     [self updateCellLayoutToSize:self.view.bounds.size];
 }
 #endif
+
+-(void) didMoveToParentViewController:(UIViewController *)parent {
+    if (!parent)
+        [self.pickerDelegate cancelledPicker];
+}
 
 #pragma mark - UICollectionViewDataSource
 

@@ -37,14 +37,14 @@ typedef void (^OnlineImageFailureBlock)(NSError* error, id<OnlineImageSource> so
 @property(nonatomic) NSUInteger pageSize;
 
 /**
- * The number of seconds to wait for images to load before requerying already-finished sources. Defaults to 5 seconds.
+ * The number of seconds to wait for images to load before requerying already-finished sources. Defaults to 3 seconds.
  *
  * Making this number shorter can make this manager more responsive, at the risk of filling the results with images from a single fast-returning source.
  */
 @property(nonatomic) NSTimeInterval nextQueryTimeout;
 
 /**
- * The number of seconds to wait for images to load before requerying still-loading sources. Defaults to 15 seconds.
+ * The number of seconds to wait for images to load before requerying still-loading sources. Defaults to 10 seconds.
  */
 @property(nonatomic) NSTimeInterval requeryTimeout;
 

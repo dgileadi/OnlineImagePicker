@@ -12,16 +12,9 @@
 
 @implementation FlickrUserImagesSource
 
--(id) init {
-    if (self = [super init]) {
-        self.username = @"me";
-    }
-    return self;
-}
-
 /** This image source is only available if we have a username to load images for or if the current user is logged in. */
 -(BOOL) isAvailable {
-    return (self.username != nil && ![self.username isEqualToString:@"me"]) || [FlickrKit sharedFlickrKit].authorized;
+    return !self.username || ![self.username isEqualToString:@"me"] || [FlickrKit sharedFlickrKit].authorized;
 }
 
 -(id<OnlineImageAccount>) account {
@@ -32,10 +25,24 @@
     return [FlickrKit sharedFlickrKit].authorized ? @"flickr.people.getPhotos" : @"flickr.people.getPublicPhotos";
 }
 
--(NSDictionary *) argsWithCount:(NSUInteger)count {
+-(NSDictionary *) args {
     return @{@"user_id": self.username,
-             @"per_page": [NSString stringWithFormat:@"%d", count],
+             @"per_page": [NSString stringWithFormat:@"%d", self.pageSize],
              @"page": [NSString stringWithFormat:@"%d", self.page]};
+}
+
+-(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
+    if (!self.username)
+        self.username = @"me";
+    if ([self.username isEqualToString:@"me"] && ![FlickrKit sharedFlickrKit].authorized)
+        [[FlickrKit sharedFlickrKit] checkAuthorizationOnCompletion:^(NSString *userName, NSString *userId, NSString *fullName, NSError *error) {
+            if (error)
+                resultsBlock(nil, error);
+            else
+                [super load:count images:resultsBlock];
+        }];
+    else
+        [super load:count images:resultsBlock];
 }
 
 @end

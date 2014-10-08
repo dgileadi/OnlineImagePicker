@@ -22,8 +22,8 @@
     return @"flickr.interestingness.getList";
 }
 
--(NSDictionary *) argsWithCount:(NSUInteger)count {
-    return @{@"per_page": [NSString stringWithFormat:@"%d", count],
+-(NSDictionary *) args {
+    return @{@"per_page": [NSString stringWithFormat:@"%d", self.pageSize],
              @"page": [NSString stringWithFormat:@"%d", self.page]};
 }
 

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5023" systemVersion="13A603" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment defaultVersion="1808" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
-        <!--class Prefix:identifier View Controller-->
+        <!--Example Online Image Picker Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="OnlineImageViewController" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ExampleOnlineImagePickerController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -17,9 +18,61 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <segue destination="FTQ-af-ckG" kind="replace" identifier="ShowImage" splitViewControllerTargetIndex="1" id="6CW-Pl-vR6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Example Online Image View Controller-->
+        <scene sceneID="BUo-se-cRM">
+            <objects>
+                <viewController id="FTQ-af-ckG" customClass="ExampleOnlineImageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xSW-cA-iW0"/>
+                        <viewControllerLayoutGuide type="bottom" id="PY7-7D-ns6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8fZ-5D-yTc">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vJx-Pp-nO6">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rGI-MA-sC5">
+                                        <rect key="frame" x="-49" y="6" width="81" height="54"/>
+                                    </imageView>
+                                </subviews>
+                            </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xpq-zV-FQO" customClass="M13ProgressViewRing">
+                                <rect key="frame" x="309" y="437" width="150" height="150"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="SiL-qA-IjR"/>
+                                    <constraint firstAttribute="height" constant="150" id="ukn-Uh-5IQ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="Xpq-zV-FQO" secondAttribute="centerY" id="Gyp-WC-Eaq"/>
+                            <constraint firstAttribute="bottom" secondItem="vJx-Pp-nO6" secondAttribute="bottom" id="M6Z-J1-mOH"/>
+                            <constraint firstItem="vJx-Pp-nO6" firstAttribute="leading" secondItem="8fZ-5D-yTc" secondAttribute="leading" id="VLM-1Y-gcr"/>
+                            <constraint firstAttribute="centerX" secondItem="Xpq-zV-FQO" secondAttribute="centerX" id="alr-Pu-xtL"/>
+                            <constraint firstItem="vJx-Pp-nO6" firstAttribute="top" secondItem="8fZ-5D-yTc" secondAttribute="top" id="wLD-4c-pjE"/>
+                            <constraint firstAttribute="trailing" secondItem="vJx-Pp-nO6" secondAttribute="trailing" id="xmM-cF-xqh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="rGI-MA-sC5" id="qPs-nd-hu1"/>
+                        <outlet property="progressView" destination="Xpq-zV-FQO" id="fpC-36-Mzo"/>
+                        <outlet property="scrollView" destination="vJx-Pp-nO6" id="AeU-df-MtW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gHf-oQ-WIs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1032" y="136"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

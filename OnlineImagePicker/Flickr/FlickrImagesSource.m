@@ -17,9 +17,22 @@
     if (self = [super init]) {
         self.pages = NSUIntegerMax;
         self.page = 0;
+        self.pageSize = 0;
         [[FlickrAccount sharedInstance] registerWithFlickrKit];
     }
     return self;
+}
+
+-(id<OnlineImageAccount>) account {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+}
+
+-(BOOL) isAvailable {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
 }
 
 -(BOOL) hasMoreImages {
@@ -36,6 +49,7 @@
 
 -(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.page = 0;
+    self.pageSize = count;
     self.pages = NSUIntegerMax;
     [self next:count images:resultsBlock];
 }
@@ -46,7 +60,7 @@
                                  userInfo:nil];
 }
 
--(NSDictionary *) argsWithCount:(NSUInteger)count {
+-(NSDictionary *) args {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
@@ -55,7 +69,7 @@
 -(void) next:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
     self.loadStarted = [NSDate date];
     self.page++;
-    [[FlickrKit sharedFlickrKit] call:[self call] args:[self argsWithCount:count] maxCacheAge:FKDUMaxAgeFiveMinutes completion:^(NSDictionary *response, NSError *error) {
+    [[FlickrKit sharedFlickrKit] call:[self call] args:[self args] maxCacheAge:FKDUMaxAgeFiveMinutes completion:^(NSDictionary *response, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.loadStarted = nil;
             NSMutableArray *results = nil;
@@ -63,7 +77,7 @@
                 if (self.pages == NSUIntegerMax)
                     self.pages = [[response valueForKeyPath:@"total"] unsignedIntegerValue];
                 
-                results = [NSMutableArray arrayWithCapacity:count];
+                results = [NSMutableArray arrayWithCapacity:self.pageSize];
                 for (NSDictionary *photoDictionary in [response valueForKeyPath:@"photos.photo"])
                     [results addObject:[[FlickrImageInfo alloc] initWithData:photoDictionary]];
             }

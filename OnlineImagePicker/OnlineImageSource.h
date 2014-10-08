@@ -29,10 +29,7 @@ typedef void(^OnlineImageSourceResultsBlock)(NSArray *results, NSError *error);
 /** Whether the image source is available. An image source that requires authentication may be unavailable if credentials haven't been provided, for example. */
 -(BOOL) isAvailable;
 
-/**
- * Returns whether any more images are available. If `loadImagesWithSuccess:orFailure:` hasn't yet been called then this method is not required to return
- * a sensible result.
- */
+/** Returns whether any more images are available. Should return YES if the source doesn't know if it has images yet. */
 -(BOOL) hasMoreImages;
 
 /** Returns YES if a request for images has started that hasn't been replied to yet. */
