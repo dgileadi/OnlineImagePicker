@@ -149,7 +149,7 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     if (!self.imageInfo.count) {
         [self.imageManager loadImagesWithSuccess:resultsBlock orFailure:failureBlock];
         [self.collectionView reloadData];
-    } else if ([self.imageManager hasMoreImages])
+    } else if (self.imageManager.hasMoreImages)
         [self.imageManager nextImagesWithSuccess:resultsBlock orFailure:failureBlock];
 }
 
@@ -219,7 +219,7 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
     NSUInteger activeCount = 0;
     for (id<OnlineImageAccount> account in self.imageManager.accounts)
-        if ([account isLoggedIn])
+        if (account.isLoggedIn)
             activeCount++;
     NSString *active = [numberFormatter stringFromNumber:[NSNumber numberWithUnsignedInteger:activeCount]];
     NSString *total = [numberFormatter stringFromNumber:[NSNumber numberWithUnsignedInteger:self.imageManager.accounts.count]];

@@ -54,7 +54,7 @@
 
 /** This image source is only available if we the user has logged into Dropbox. */
 -(BOOL) isAvailable {
-    return [[self account] isLoggedIn];
+    return [self account].isLoggedIn;
 }
 
 -(id<OnlineImageAccount>) account {

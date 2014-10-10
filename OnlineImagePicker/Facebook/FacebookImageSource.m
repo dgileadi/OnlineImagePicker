@@ -26,7 +26,7 @@
 
 /** This image source is only available if we have a username to load images for. */
 -(BOOL) isAvailable {
-    return [[FacebookAccount sharedInstance] isLoggedIn];
+    return [FacebookAccount sharedInstance].isLoggedIn;
 }
 
 -(id<OnlineImageAccount>) account {

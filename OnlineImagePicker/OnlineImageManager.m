@@ -96,7 +96,7 @@
 -(NSUInteger) calcSourcePageSizeFrom:(NSUInteger)pageSize includeMoreImages:(BOOL)includeMoreImages {
     NSUInteger availableCount = 0;
     for (id<OnlineImageSource> source in self.sources) {
-        if ([source isAvailable] && (!includeMoreImages || [source hasMoreImages]))
+        if (source.isAvailable && (!includeMoreImages || source.hasMoreImages))
             availableCount++;
     }
     if (availableCount)

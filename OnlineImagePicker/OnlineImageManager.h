@@ -56,7 +56,7 @@ typedef void (^OnlineImageFailureBlock)(NSError* error, id<OnlineImageSource> so
 /**
  * An array of objects that implement the OnlineImageSource protocol, which will be queried for images. Inactive sources will be ignored. Defaults to empty.
  */
--(NSArray *) imageSources;
+@property(nonatomic, readonly) NSArray *imageSources;
 
 /**
  * Add an object that implements the OnlineImageSource protocol, which will be queried for images if active.
@@ -81,17 +81,17 @@ typedef void (^OnlineImageFailureBlock)(NSError* error, id<OnlineImageSource> so
 /**
  * An array of accounts used by the image sources. Each image source reports which account it uses, if any.
  */
--(NSArray *) accounts;
+@property(nonatomic, readonly) NSArray *accounts;
 
 /**
  * Whether any more images are available. Before the first request this always returns YES.
  */
--(BOOL) hasMoreImages;
+@property(nonatomic, readonly) BOOL hasMoreImages;
 
 /**
  * Whether any of the sources are currently loading information about images.
  */
--(BOOL) isLoading;
+@property(nonatomic, readonly) BOOL isLoading;
 
 /**
  * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImagesWithSuccess:orFailure:.

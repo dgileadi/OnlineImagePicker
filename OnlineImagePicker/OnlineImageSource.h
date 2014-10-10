@@ -24,19 +24,19 @@ typedef void(^OnlineImageSourceResultsBlock)(NSArray *results, NSError *error);
 @protocol OnlineImageSource <NSObject>
 
 /** Returns the account required by this OnlineImageSource or `nil` if no user account is required. */
--(id<OnlineImageAccount>) account;
+@property(nonatomic, readonly) id<OnlineImageAccount> account;
 
 /** Whether the image source is available. An image source that requires authentication may be unavailable if credentials haven't been provided, for example. */
--(BOOL) isAvailable;
+@property(nonatomic, readonly) BOOL isAvailable;
 
 /** Returns whether any more images are available. Should return YES if the source doesn't know if it has images yet. */
--(BOOL) hasMoreImages;
+@property(nonatomic, readonly) BOOL hasMoreImages;
 
 /** Returns YES if a request for images has started that hasn't been replied to yet. */
--(BOOL) isLoading;
+@property(nonatomic, readonly) BOOL isLoading;
 
 /** If isLoading returns YES, returns the time that the load started. */
--(NSDate *) loadStartTime;
+@property(nonatomic, readonly) NSDate *loadStartTime;
 
 /**
  * Start a new request for images. Only a single page of results is returned. To load further pages of results use nextImages:.

@@ -27,6 +27,7 @@ Using the picker could hardly be easier:
 		..
 		OnlineImagePickerController *picker = [[OnlineImagePickerController alloc] initWithDelegate:self];
 		[self presentViewController:picker animated:YES completion:nil];
+		// or you could push the picker onto a UINavigationController stack
 	}
 
 	// your class needs to implement the OnlineImagePickerDelegate protocol:
@@ -137,6 +138,16 @@ If you'd rather not store them in your Info.plist then you can instead put the f
 	[[FlickrKit sharedFlickrKit] initializeWithAPIKey:@"INSERT_API_KEY"
 	                                     sharedSecret:@"INSERT_SECRET"];
 
+If you plan to load user images then it can speed up image loading if you log the user into Flickr when your app launches. To do this you can add code like the following to your AppDelegate's `application:didFinishLaunchingWIthOptions:` method:
+
+	[[FlickrKit sharedFlickrKit] checkAuthorizationOnCompletion:^(NSString *userName, NSString *userId, NSString *fullName, NSError *error) {
+        // maybe handle the error somehow, if there is one
+    }];
+
+Be sure that before the call to `checkAuthorizationOnCompletion:` you either call the above code to `initializeWithAPIKey:sharedSecret:` or else call the following to use the Flickr values from your Info.plist:
+
+	[[FlickrAccount sharedInstance] registerWithFlickrKit];
+
 Setting up Instagram
 --------------------
 
@@ -154,4 +165,15 @@ InstagramKitAuthorizationUrl	| `https://api.instagram.com/oauth/authorize/`
 Building Your Own Picker
 ------------------------
 
-You may decide that you'd prefer a custom UI instead of using OnlineImagePickerController. That's fine; you're welcome to do so. Under the hood OnlineImagePickerController uses an instance of OnlineImageManager to provide its images. You're welcome to do the same for your custom UI.
+You may decide that you'd prefer a custom UI instead of using `OnlineImagePickerController`. That's fine; you're welcome to do so. Under the hood `OnlineImagePickerController` uses an instance of `OnlineImageManager` to provide its images. You're welcome to do the same for your custom UI.
+
+Creating Your Own Image Source
+------------------------------
+
+Suppose you aren't satisfied with Dropbox, Facebook, Flickr, Instagram and the device's Photo Library and want to support an additional source of images. To do so you'll need to create the following classes:
+
+1. A class that implements the `OnlineImageSource` protocol. This class will be responsible for loading metadata about images. The protocol's header file is well-documented, and you can examine one of the existing classes like `InstagramUserFeedImageSource` for an example.
+2. A class that implements the `OnlineImageInfo` protocol. This class will be responsible for holding metadata about a single image, and for being able to load a thumnail and full-size image. Your implementation of `OnlineImageSource` will create and return instances of this class. In most cases you can do like `InstagramImageInfo` and just extend `SDWebImageInfo` to get the loading for free, provided you supply the appropriate URLs.
+3. If your source of images requires authentication then you'll also need a class that implements the `OnlineImageAccount` protocol, and have your OnlineImageSource return an instance of it from its `account` method.
+
+To use your new source of images you can pass it to `OnlineImagePickerController` or to `OnlineImageManager`, depending on which you use.

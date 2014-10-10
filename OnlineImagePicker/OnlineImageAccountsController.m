@@ -102,11 +102,11 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
     cell.detailTextLabel.text = [account isLoggedIn] ? logout : login;
     
     UIImage *icon = [account icon];
-    if (![account isLoggedIn])
+    if (!account.isLoggedIn)
         icon = [self convertImageToGrayScale:icon];
     cell.imageView.image = icon;
     
-    cell.accessoryType = [account isLoggedIn] ? UITableViewCellAccessoryNone : UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryType = account.isLoggedIn ? UITableViewCellAccessoryNone : UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
 }
@@ -117,7 +117,7 @@ static NSString * const kCellIdentifier = @"OnlineImageAccountCell";
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     id<OnlineImageAccount> account = [self.accounts objectAtIndex:indexPath.row];
-    if ([account isLoggedIn]) {
+    if (account.isLoggedIn) {
         [account logout];
         [self.tableView reloadData];
     } else {

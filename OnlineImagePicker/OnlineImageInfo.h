@@ -47,6 +47,6 @@ typedef void(^OnlineImageInfoCompletedBlock)(UIImage *image, NSError *error);
                                           completed:(OnlineImageInfoCompletedBlock)completedBlock;
 
 /** A class-specific object that provides metadata about the image. */
--(id) metadata;
+@property(nonatomic, readonly) id metadata;
 
 @end

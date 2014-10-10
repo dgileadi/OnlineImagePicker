@@ -24,13 +24,13 @@ typedef void(^OnlineAccountLoginComplete)(NSError *error, id<OnlineImageAccount>
 @protocol OnlineImageAccount <NSObject>
 
 /** An icon to display in the list of accounts. */
--(UIImage *) icon;
+@property(nonatomic, readonly) UIImage *icon;
 
 /** A description to display in the list of accounts. */
--(NSString *) description;
+@property(readonly, copy) NSString *description;
 
 /** Whether the account is already logged in. Accounts should persist credentials as long as practible. */
--(BOOL) isLoggedIn;
+@property(nonatomic, readonly) BOOL isLoggedIn;
 
 /**
  * Perform an interactive login, then call a handler with the result. Accounts should typically push a controller onto
