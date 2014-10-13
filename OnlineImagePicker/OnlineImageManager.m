@@ -12,7 +12,6 @@
 @interface OnlineImageManager()
 
 @property(nonatomic) NSMutableArray *sources;
-@property(nonatomic) NSMutableArray *accounts;
 @property(nonatomic) NSUInteger sourcePageSize;
 @property(nonatomic) NSUInteger requestedToSelf;
 @property(nonatomic) NSUInteger requestedFromSources;
@@ -22,12 +21,16 @@
 @end
 
 
-@implementation OnlineImageManager
+@implementation OnlineImageManager {
+    NSMutableArray *_accounts;
+}
+
+@synthesize accounts = _accounts;
 
 -(id) init {
     if (self = [super init]) {
         self.sources = [NSMutableArray array];
-        self.accounts = [NSMutableArray array];
+        _accounts = [NSMutableArray array];
         self.pageSize = 64;
         self.nextQueryTimeout = 3;
         self.requeryTimeout = 10;
@@ -70,7 +73,7 @@
 
 -(NSArray *) accounts {
     if (!_accounts) {
-        [self setAccounts:[NSMutableArray array]];
+        _accounts = [NSMutableArray array];
         for (id<OnlineImageSource> source in self.sources) {
             id<OnlineImageAccount> account = [source account];
             if (account) {
