@@ -30,7 +30,7 @@
 /**
  * Called when a user closes the picker by tapping the Cancel button or by tapping the previous item in a UINavigationController stack.
  */
--(void) cancelledPicker;
+-(void) cancelledImagePicker;
 
 @end
 

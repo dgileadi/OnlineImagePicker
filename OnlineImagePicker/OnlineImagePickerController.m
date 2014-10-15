@@ -188,7 +188,7 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     if (self.navigationController) {
         self.navigationItem.rightBarButtonItem = accounts;
     } else if (self.presentingViewController) {
-        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.pickerDelegate action:@selector(cancelledPicker)];
+        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.pickerDelegate action:@selector(cancelledImagePicker)];
         UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         items = @[cancel, space, accounts];
     } else if (!self.parentViewController) {
@@ -282,7 +282,7 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
 
 -(void) didMoveToParentViewController:(UIViewController *)parent {
     if (!parent)
-        [self.pickerDelegate cancelledPicker];
+        [self.pickerDelegate cancelledImagePicker];
 }
 
 #pragma mark - UICollectionViewDataSource
