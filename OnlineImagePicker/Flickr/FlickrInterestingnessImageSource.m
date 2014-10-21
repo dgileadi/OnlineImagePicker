@@ -23,8 +23,8 @@
 }
 
 -(NSDictionary *) args {
-    return @{@"per_page": [NSString stringWithFormat:@"%d", self.pageSize],
-             @"page": [NSString stringWithFormat:@"%d", self.page]};
+    return @{@"per_page": [NSString stringWithFormat:@"%lu", (unsigned long)self.pageSize],
+             @"page": [NSString stringWithFormat:@"%lu", (unsigned long)self.page]};
 }
 
 @end

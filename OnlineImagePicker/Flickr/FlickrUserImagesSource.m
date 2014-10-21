@@ -27,8 +27,8 @@
 
 -(NSDictionary *) args {
     return @{@"user_id": self.username,
-             @"per_page": [NSString stringWithFormat:@"%d", self.pageSize],
-             @"page": [NSString stringWithFormat:@"%d", self.page]};
+             @"per_page": [NSString stringWithFormat:@"%lu", (unsigned long)self.pageSize],
+             @"page": [NSString stringWithFormat:@"%lu", (unsigned long)self.page]};
 }
 
 -(void) load:(NSUInteger)count images:(OnlineImageSourceResultsBlock)resultsBlock {
