@@ -24,6 +24,7 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
 
 @property(nonatomic) NSMutableArray *imageInfo;
 @property(nonatomic) NSTimer *timer;
+@property(nonatomic) BOOL calledDelegate;
 
 @end
 
@@ -77,6 +78,7 @@ static NSString * const kCellIdentifier = @"OnlineImagePickerCell";
     self.imageInfo = [NSMutableArray array];
     self.preferredContentSize = CGSizeMake(75, 75);
     self.cellMargins = CGSizeMake(2, 2);
+    self.calledDelegate = NO;
 }
 
 -(void) addDefaultImageSources {
@@ -188,7 +190,7 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
     if (self.navigationController) {
         self.navigationItem.rightBarButtonItem = accounts;
     } else if (self.presentingViewController) {
-        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.pickerDelegate action:@selector(cancelledImagePicker)];
+        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPicker)];
         UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         items = @[cancel, space, accounts];
     } else if (!self.parentViewController) {
@@ -280,9 +282,16 @@ NSLog(@"Got %d items, spinnerCell: %d, loading: %d", results.count, spinnerCell,
 }
 #endif
 
--(void) didMoveToParentViewController:(UIViewController *)parent {
+-(void) willMoveToParentViewController:(UIViewController *)parent {
     if (!parent)
+        [self cancelPicker];
+}
+
+-(void) cancelPicker {
+    if (!self.calledDelegate) {
+        self.calledDelegate = YES;
         [self.pickerDelegate cancelledImagePicker];
+    }
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -317,8 +326,10 @@ NSLog(@"Not loading, so count is %d", self.imageInfo.count);
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     if (self.pickerDelegate) {
         OnlineImagePickerCell *cell = (OnlineImagePickerCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
-        if (cell.imageInfo)
+        if (cell.imageInfo && !self.calledDelegate) {
+            self.calledDelegate = YES;
             [self.pickerDelegate imagePickedWithInfo:cell.imageInfo andThumbnail:cell.imageView.image];
+        }
     }
 }
 
