@@ -10,7 +10,7 @@
 #import "FacebookAccount.h"
 #import "FacebookImageInfo.h"
 #import "OnlineImageAccount.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 
 @interface FacebookImageSource()
@@ -64,23 +64,28 @@
         parameters[@"after"] = self.after;
         self.nextRequested = YES;
     }
-    [FBRequestConnection startWithGraphPath:[self graphURL] parameters:parameters HTTPMethod:@"GET" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        self.loadStarted = nil;
-        NSMutableArray *results = nil;
-        if (!error) {
-            NSDictionary *paging = [result objectForKey:@"paging"];
-            self.after = [paging objectForKey:@"after"];
+    if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"user_photos"]) {
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[self graphURL] parameters:parameters];
+        FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+        [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+            self.loadStarted = nil;
+            NSMutableArray *results = nil;
+            if (!error) {
+                NSDictionary *paging = [result objectForKey:@"paging"];
+                self.after = [paging objectForKey:@"after"];
+                
+                NSArray *data = [result objectForKey:@"data"];
+                NSMutableArray *results = [NSMutableArray arrayWithCapacity:data.count];
+                for (NSDictionary *photo in data)
+                    [results addObject:[[FacebookImageInfo alloc] initWithData:photo]];
+            } else {
+                NSLog(@"An error occurred getting images from Facebook: %@", [error localizedDescription]);
+            }
             
-            NSArray *data = [result objectForKey:@"data"];
-            NSMutableArray *results = [NSMutableArray arrayWithCapacity:data.count];
-            for (NSDictionary *photo in data)
-                [results addObject:[[FacebookImageInfo alloc] initWithData:photo]];
-        } else {
-            NSLog(@"An error occurred getting images from Facebook: %@", [error localizedDescription]);
-        }
-        
-        resultsBlock(results, error);
-    }];
+            resultsBlock(results, error);
+        }];
+        [connection start];
+    }
 }
 
 @end

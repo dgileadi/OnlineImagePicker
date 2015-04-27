@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OnlineImageAccount.h"
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 /**
  * Supports user authentication for Facebook.

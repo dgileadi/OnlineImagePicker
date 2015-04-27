@@ -8,7 +8,14 @@
 
 #import "FacebookAccount.h"
 #import <UIKit/UIKit.h>
-#import <FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+
+@interface FacebookAccount()
+
+@property(nonatomic) FBSDKLoginManager *loginManager;
+
+@end
 
 @implementation FacebookAccount
 
@@ -23,28 +30,9 @@
 
 -(id) init {
     if (self = [super init]) {
-        // if there's a cached session, just open the session silently, without showing the user the login UI
-        if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-            [FBSession openActiveSessionWithReadPermissions:@[@"public_profile", @"user_photos"]
-                                               allowLoginUI:NO
-                                          completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-                                              [self sessionStateChanged:session state:state error:error];
-                                          }];
-        }
+        self.loginManager = [[FBSDKLoginManager alloc] init];
     }
     return self;
-}
-
--(void) sessionStateChanged:(FBSession *)session state:(FBSessionState)state error:(NSError *)error {
-    // forward to the AppDelegate if applicable
-    id appDelegate = [UIApplication sharedApplication].delegate;
-    if ([appDelegate respondsToSelector:@selector(sessionStateChanged:state:error:)])
-        [appDelegate sessionStateChanged:session state:state error:error];
-    else if (error && [FBErrorUtility shouldNotifyUserForError:error]) {
-        NSString *alertTitle = @"Something went wrong";
-        NSString *alertText = [FBErrorUtility userMessageForError:error];
-        [self showMessage:alertText withTitle:alertTitle];
-    }
 }
 
 -(void) showMessage:(NSString *)message withTitle:(NSString *)title {
@@ -66,21 +54,24 @@
 }
 
 -(BOOL) isLoggedIn {
-    return FBSession.activeSession.state == FBSessionStateOpen || FBSession.activeSession.state == FBSessionStateOpenTokenExtended;
+    return [[FBSDKAccessToken currentAccessToken] hasGranted:@"user_photos"];
 }
 
 -(void) loginFromController:(UINavigationController *)navigationController thenCall:(OnlineAccountLoginComplete)completed {
-    if (FBSession.activeSession.state != FBSessionStateOpen
-        && FBSession.activeSession.state != FBSessionStateOpenTokenExtended) {
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile", @"user_photos"] allowLoginUI:YES completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-            [self sessionStateChanged:session state:state error:error];
+    if (![self isLoggedIn]) {
+        [self.loginManager logInWithReadPermissions:@[@"user_photos"] handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+            if (error) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alert show];
+            }
+            
             completed(error, self);
         }];
     }
 }
 
 -(void) logout {
-    [FBSession.activeSession closeAndClearTokenInformation];
+    [self.loginManager logOut];
 }
 
 @end
